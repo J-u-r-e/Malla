@@ -73,6 +73,7 @@ const ramos = [
   { nombre: "Taller especializado II", requiere: ["Taller especializado I"] },
 ];
 
+// Agrupar por semestre
 const contenedor = document.getElementById("malla");
 const semestres = [...new Set(ramos.map(r => r.semestre))];
 
