@@ -138,3 +138,8 @@ document.getElementById("malla").addEventListener("click", e => {
       }
     });
   }
+  
+actualizarRamos();
+});
+
+actualizarRamos();
