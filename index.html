@@ -2,14 +2,148 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Malla Curricular Interactiva - Diseño Gráfico</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Malla Curricular Interactiva de Diseño Gráfico</title>
   <link rel="stylesheet" href="estilos.css" />
 </head>
 <body>
-  <h1>Malla Curricular Interactiva</h1>
-  <div id="malla"></div>
+  <h1>Malla Curricular Interactiva de Diseño Gráfico</h1>
+  <div class="malla">
 
-  <div id="malla"></div>
+    <!-- Primer Año - I Semestre -->
+    <section class="semestre">
+      <h2>Primer Año - I Semestre</h2>
+      <div class="cursos">
+        <button data-id="humanidades1" data-desbloquea="humanidades2">Humanidades 1</button>
+        <button>Actividad cultural</button>
+        <button>Actividad deportiva</button>
+        <button data-id="diseno1" data-desbloquea="diseno2">Diseño I</button>
+        <button data-id="dibujo1" data-desbloquea="dibujo2">Dibujo I</button>
+        <button data-id="pigmentos" data-desbloquea="tallergrafico1">Taller de pigmentos</button>
+        <button>Taller de arcilla</button>
+      </div>
+    </section>
+
+    <!-- Primer Año - II Semestre -->
+    <section class="semestre">
+      <h2>Primer Año - II Semestre</h2>
+      <div class="cursos">
+        <button data-id="humanidades2" data-desbloquea="seminario1" disabled>Humanidades 2</button>
+        <button data-id="teoriaarte" data-desbloquea="semiosis">Teoría del arte</button>
+        <button data-id="diseno2" data-desbloquea="diseno3" disabled>Diseño II</button>
+        <button data-id="dibujo2" data-desbloquea="dibujo3" disabled>Dibujo II</button>
+        <button>Taller de madera</button>
+        <button data-id="papeltextil" data-desbloquea="sistemas1">Taller de papel y textil</button>
+      </div>
+    </section>
+
+    <!-- Segundo Año - III Semestre -->
+    <section class="semestre">
+      <h2>Segundo Año - III Semestre</h2>
+      <div class="cursos">
+        <button data-id="arte1" data-desbloquea="arte2">Introducción al arte 1</button>
+        <button>Introducción a la Antropología</button>
+        <button data-id="diseno3" data-desbloquea="diseno4" disabled>Diseño III</button>
+        <button data-id="dibujo3" data-desbloquea="dibujo4" disabled>Dibujo III</button>
+        <button>Taller de vidrio y plástico</button>
+        <button>Taller de metal</button>
+      </div>
+    </section>
+
+    <!-- Segundo Año - IV Semestre -->
+    <section class="semestre">
+      <h2>Segundo Año - IV Semestre</h2>
+      <div class="cursos">
+        <button data-id="arte2" data-desbloquea="artecr_histg">Introducción al arte 2</button>
+        <button data-id="semiosis" disabled>Semiosis de la producción</button>
+        <button>Repertorio</button>
+        <button data-id="diseno4" data-desbloquea="dg1,foto1" disabled>Diseño IV</button>
+        <button data-id="dibujo4" data-desbloquea="tallergrafico1,dopt1,dopt2,dopt3,topt1,topt2" disabled>Dibujo IV</button>
+        <button data-id="iluminacion" data-desbloquea="foto1">Taller de iluminación</button>
+        <button>Taller de piedra</button>
+      </div>
+    </section>
+
+    <!-- Tercer Año - V Semestre -->
+    <section class="semestre">
+      <h2>Tercer Año - V Semestre</h2>
+      <div class="cursos">
+        <button data-id="artecr_histg">Arte Costarricense</button>
+        <button data-id="dopt1">Dibujo optativo I</button>
+        <button data-id="dg1" data-desbloquea="dg2" disabled>Diseño Gráfico I</button>
+        <button data-id="tallergrafico1" data-desbloquea="tallergrafico2" disabled>Taller Gráfico I</button>
+        <button data-id="foto1" data-desbloquea="foto2" disabled>Fotografía I</button>
+        <button data-id="digital1" data-desbloquea="digital2">Medios Digitales I</button>
+        <button data-id="sistemas1" data-desbloquea="sistemas2">Sistemas de Reproducción I</button>
+      </div>
+    </section>
+
+    <!-- Tercer Año - VI Semestre -->
+    <section class="semestre">
+      <h2>Tercer Año - VI Semestre</h2>
+      <div class="cursos">
+        <button>Historia del Diseño Gráfico</button>
+        <button data-id="seminario1" data-desbloquea="seminario2" disabled>Seminario de Realidad Nacional 1</button>
+        <button data-id="dg2" data-desbloquea="dg3" disabled>Diseño Gráfico II</button>
+        <button data-id="tallergrafico2" data-desbloquea="tallergrafico3" disabled>Taller Gráfico II</button>
+        <button data-id="foto2" data-desbloquea="foto3" disabled>Fotografía II</button>
+        <button data-id="digital2" data-desbloquea="digital3" disabled>Medios Digitales II</button>
+        <button data-id="sistemas2" data-desbloquea="sistemas3" disabled>Sistemas de Reproducción II</button>
+      </div>
+    </section>
+
+    <!-- Cuarto Año - VII Semestre -->
+    <section class="semestre">
+      <h2>Cuarto Año - VII Semestre</h2>
+      <div class="cursos">
+        <button>Historia del arte optativa I</button>
+        <button>Idioma</button>
+        <button data-id="dg3" data-desbloquea="interactivo" disabled>Diseño Gráfico III</button>
+        <button data-id="tallergrafico3" data-desbloquea="interactivo" disabled>Taller Gráfico III</button>
+        <button data-id="foto3">Fotografía III</button>
+        <button data-id="digital3">Medios Digitales III</button>
+        <button data-id="sistemas3" data-desbloquea="interactivo">Sistemas de Reproducción III</button>
+      </div>
+    </section>
+
+    <!-- Cuarto Año - VIII Semestre -->
+    <section class="semestre">
+      <h2>Cuarto Año - VIII Semestre</h2>
+      <div class="cursos">
+        <button>Historia del arte optativa II</button>
+        <button data-id="seminario2">Seminario de Realidad Nacional 2</button>
+        <button data-id="topt1">Taller Optativo I</button>
+        <button data-id="topt2">Taller Optativo II</button>
+        <button data-id="dopt2">Dibujo optativo II</button>
+        <button data-id="dopt3">Dibujo optativo III</button>
+        <button data-id="interactivo" data-desbloquea="tespecial1">Diseño Interactivo</button>
+      </div>
+    </section>
+
+    <!-- Quinto Año - IX Semestre -->
+    <section class="semestre">
+      <h2>Quinto Año - IX Semestre</h2>
+      <div class="cursos">
+        <button>Taller Optativo III</button>
+        <button>Taller Optativo IV</button>
+        <button>Taller Optativo V</button>
+        <button>Técnicas de Investigación</button>
+        <button data-id="tespecial1">Taller especializado I</button>
+      </div>
+    </section>
+
+    <!-- Quinto Año - X Semestre -->
+    <section class="semestre">
+      <h2>Quinto Año - X Semestre</h2>
+      <div class="cursos">
+        <button>Taller Optativo VI</button>
+        <button>Taller Optativo VII</button>
+        <button>Administración de las artes</button>
+        <button>Taller especializado II</button>
+      </div>
+    </section>
+
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
