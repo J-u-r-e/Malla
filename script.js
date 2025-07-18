@@ -1,12 +1,12 @@
 const ramos = [
   // Primer año
-  { nombre: "Humanidades 1", abre: ["Humanidades 2"] },
-  { nombre: "Actividad cultural" },
-  { nombre: "Actividad deportiva" },
-  { nombre: "Diseño I", abre: ["Diseño II"] },
-  { nombre: "Dibujo I", abre: ["Dibujo II"] },
-  { nombre: "Taller de pigmentos", abre: ["Taller Gráfico I"] },
-  { nombre: "Taller de arcilla" },
+  { nombre: "Humanidades 1", abre: ["Humanidades 2"] }, semestre: "I Semestre" },
+  { nombre: "Actividad cultural" }, semestre: "I Semestre" },
+  { nombre: "Actividad deportiva" }, semestre: "I Semestre" },
+  { nombre: "Diseño I", abre: ["Diseño II"] }, semestre: "I Semestre" },
+  { nombre: "Dibujo I", abre: ["Dibujo II"] }, semestre: "I Semestre" },
+  { nombre: "Taller de pigmentos", abre: ["Taller Gráfico I"] }, semestre: "I Semestre" },
+  { nombre: "Taller de arcilla" }, semestre: "I Semestre" },
   { nombre: "Humanidades 2", abre: ["Seminario Realidad Nacional 1"], requiere: ["Humanidades 1"] },
   { nombre: "Teoría del arte", abre: ["Semiosis de la producción"] },
   { nombre: "Diseño II", abre: ["Diseño III"], requiere: ["Diseño I"] },
@@ -73,6 +73,7 @@ const ramos = [
   { nombre: "Taller especializado II", requiere: ["Taller especializado I"] },
 ];
 
+//Agrupar por semestre
 const contenedor = document.getElementById("malla");
 
 ramos.forEach((ramo, i) => {
