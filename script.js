@@ -73,16 +73,36 @@ const ramos = [
   { nombre: "Taller especializado II", requiere: ["Taller especializado I"] },
 ];
 
-//Agrupar por semestre
+// Agrupar por semestre
 const contenedor = document.getElementById("malla");
+const semestres = [...new Set(ramos.map(r => r.semestre))];
 
-ramos.forEach((ramo, i) => {
-  const div = document.createElement("div");
-  div.classList.add("ramo");
-  div.textContent = ramo.nombre;
-  if (ramo.requiere) div.classList.add("bloqueado");
-  div.dataset.index = i;
-  contenedor.appendChild(div);
+semestres.forEach(sem => {
+  const section = document.createElement("div");
+  section.classList.add("semestre");
+
+  const h2 = document.createElement("h2");
+  h2.textContent = sem;
+  section.appendChild(h2);
+
+  const grid = document.createElement("div");
+  grid.classList.add("contenido-semestre");
+
+  ramos.forEach((ramo, i) => {
+    if (ramo.semestre !== sem) return;
+
+    const div = document.createElement("div");
+    div.classList.add("ramo");
+    div.textContent = ramo.nombre;
+    div.dataset.index = i;
+
+    if (ramo.requiere) div.classList.add("bloqueado");
+
+    grid.appendChild(div);
+  });
+
+  section.appendChild(grid);
+  contenedor.appendChild(section);
 });
 
 function actualizarRamos() {
@@ -98,7 +118,7 @@ function actualizarRamos() {
   });
 }
 
-contenedor.addEventListener("click", e => {
+document.getElementById("malla").addEventListener("click", e => {
   if (!e.target.classList.contains("ramo")) return;
   const div = e.target;
   const index = parseInt(div.dataset.index);
@@ -106,7 +126,7 @@ contenedor.addEventListener("click", e => {
   if (div.classList.contains("bloqueado")) return;
   div.classList.toggle("aprobado");
 
-  // Abrir ramos que desbloquea
+  // Abrir dependencias
   if (ramo.abre) {
     ramo.abre.forEach(abierto => {
       const i = ramos.findIndex(r => r.nombre === abierto);
