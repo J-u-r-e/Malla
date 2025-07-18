@@ -18,28 +18,27 @@ h1 {
   margin: auto;
 }
 
- background-color: #d9b3ff; /* Lila claro */
-  border: 2px solid #a64dff;
-  padding: 10px;
-  margin: 5px;
-  border-radius: 8px;
-  color: white;
+.ramo {
+  background-color: #e1c5f4;
+  border: 2px solid #c494e3;
+  border-radius: 10px;
+  padding: 1rem;
   font-weight: bold;
-  cursor: default;
-  transition: background-color 0.3s;
+  cursor: not-allowed;
+  opacity: 0.5;
+  transition: 0.3s ease;
+  pointer-events: none;
+  user-select: none;
 }
 
 .ramo.desbloqueado {
   cursor: pointer;
-  box-shadow: 0 0 5px #a64dff;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .ramo.aprobado {
-  background-color: #8fd3f4; /* Celeste */
-  border-color: #3ca4dc;
-}
-.ramo.aprobado {
-  background-color: #b97de5;
+  background-color: #a2cadf;
   color: white;
   border-color: #8f4cc6;
   text-decoration: line-through;
