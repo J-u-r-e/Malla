@@ -81,7 +81,6 @@ const ramos = [
 const contenedor = document.getElementById("malla");
 const semestresUnicos = [...new Set(ramos.map(r => r.semestre))];
 
-// Mapeo visual de ramos por semestre
 semestresUnicos.forEach(semestre => {
   const section = document.createElement("div");
   section.className = "semestre";
