@@ -52,8 +52,8 @@ h1 {
 }
 
 .ramo.bloqueado {
-  background-color: #eee;
-  color: #aaa;
+  background-color: #e0d6dd;
+  color:white;
   cursor: not-allowed;
   border-color: #ccc;
 }
