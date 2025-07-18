@@ -78,30 +78,32 @@ const ramos = [
   { nombre: "Taller especializado II", requiere: ["Taller especializado I"], semestre: "X Semestre" }
 ];
 
-// Crear contenedor agrupado por semestre
 const contenedor = document.getElementById("malla");
-const semestres = [...new Set(ramos.map(r => r.semestre))];
+const semestresUnicos = [...new Set(ramos.map(r => r.semestre))];
 
-semestres.forEach(sem => {
+// Mapeo visual de ramos por semestre
+semestresUnicos.forEach(semestre => {
   const section = document.createElement("div");
-  section.classList.add("semestre");
+  section.className = "semestre";
 
-  const h2 = document.createElement("h2");
-  h2.textContent = sem;
-  section.appendChild(h2);
+  const titulo = document.createElement("h2");
+  titulo.textContent = semestre;
+  section.appendChild(titulo);
 
   const grid = document.createElement("div");
-  grid.classList.add("contenido-semestre");
+  grid.className = "contenido-semestre";
 
-  ramos.forEach((ramo, i) => {
-    if (ramo.semestre !== sem) return;
+  ramos.forEach((ramo, index) => {
+    if (ramo.semestre !== semestre) return;
 
     const div = document.createElement("div");
-    div.classList.add("ramo");
+    div.className = "ramo";
     div.textContent = ramo.nombre;
-    div.dataset.index = i;
+    div.dataset.index = index;
 
-    if (ramo.requiere) div.classList.add("bloqueado");
+    if (ramo.requiere) {
+      div.classList.add("bloqueado");
+    }
 
     grid.appendChild(div);
   });
@@ -114,37 +116,40 @@ function actualizarRamos() {
   document.querySelectorAll(".ramo").forEach(div => {
     const index = parseInt(div.dataset.index);
     const ramo = ramos[index];
+
     if (ramo.requiere) {
-      const desbloqueado = ramo.requiere.every(req =>
-        document.querySelector(`.ramo[data-index="${ramos.findIndex(r => r.nombre === req)}"]`).classList.contains("aprobado")
-      );
-      div.classList.toggle("bloqueado", !desbloqueado);
+      const requisitosCumplidos = ramo.requiere.every(nombreReq => {
+        const i = ramos.findIndex(r => r.nombre === nombreReq);
+        const requerido = document.querySelector(`.ramo[data-index="${i}"]`);
+        return requerido && requerido.classList.contains("aprobado");
+      });
+
+      if (requisitosCumplidos) {
+        div.classList.remove("bloqueado");
+      } else {
+        div.classList.add("bloqueado");
+      }
     }
   });
 }
 
 document.getElementById("malla").addEventListener("click", e => {
-  if (!e.target.classList.contains("ramo")) return;
   const div = e.target;
+  if (!div.classList.contains("ramo") || div.classList.contains("bloqueado")) return;
+
   const index = parseInt(div.dataset.index);
   const ramo = ramos[index];
-  if (div.classList.contains("bloqueado")) return;
 
   div.classList.toggle("aprobado");
 
   if (ramo.abre) {
-    ramo.abre.forEach(nombre => {
-      const i = ramos.findIndex(r => r.nombre === nombre);
+    ramo.abre.forEach(nombreAbre => {
+      const i = ramos.findIndex(r => r.nombre === nombreAbre);
       if (i !== -1) {
-        const target = document.querySelector(`.ramo[data-index="${i}"]`);
-        if (!target.classList.contains("aprobado")) {
-          target.classList.remove("bloqueado");
+        const desbloqueo = document.querySelector(`.ramo[data-index="${i}"]`);
+        if (desbloqueo && !desbloqueo.classList.contains("aprobado")) {
+          desbloqueo.classList.remove("bloqueado");
         }
       }
     });
   }
-
-  actualizarRamos();
-});
-
-actualizarRamos();
