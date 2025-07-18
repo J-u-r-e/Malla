@@ -1,40 +1,19 @@
 body {
   font-family: Arial, sans-serif;
-  background-color: #F6F6F2;
-  color: #F6F6F2;
+  background-color: #f3f3f3;
+  color: #333;
   padding: 20px;
 }
 
 h1 {
   text-align: center;
   margin-bottom: 30px;
-  font-size: 26px;
 }
 
 #malla {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
-
-.semestre {
-  padding: 10px;
-  background-color: #f6f6f2;
-  border-left: 5px solid #9e77d6;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.semestre h2 {
-  margin-top: 0;
-  color: #6a38a3;
-}
-
-.contenido-semestre {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 12px;
-  margin-top: 10px;
 }
 
 .ramo {
@@ -45,10 +24,6 @@ h1 {
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
-}
-
-.ramo:hover {
-  transform: scale(1.03);
 }
 
 .ramo.bloqueado {
