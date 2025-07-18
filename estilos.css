@@ -28,7 +28,7 @@ h1 {
 
 .ramo.bloqueado {
   background-color: #e0d6dd;
-  color:white;
+  color: #aaa;
   cursor: not-allowed;
   border-color: #ccc;
 }
@@ -36,5 +36,5 @@ h1 {
 .ramo.aprobado {
   background-color: #a2cadf;
   border-color: #61c0dd;
-  color:white;
+  color: #aaa;
 }
