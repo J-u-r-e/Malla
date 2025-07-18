@@ -1,1 +1,85 @@
+const ramosData = [
+  { id: "HUM1", nombre: "Humanidades 1", requisitos: [], abre: ["HUM2"] },
+  { id: "HUM2", nombre: "Humanidades 2", requisitos: ["HUM1"], abre: ["SRN1"] },
+  { id: "SRN1", nombre: "Seminario Realidad Nacional 1", requisitos: ["HUM2"], abre: ["SRN2"] },
+  { id: "SRN2", nombre: "Seminario Realidad Nacional 2", requisitos: ["SRN1"] },
+  { id: "ACUL", nombre: "Actividad cultural", requisitos: [] },
+  { id: "ADEP", nombre: "Actividad deportiva", requisitos: [] },
+  { id: "DIS1", nombre: "Diseño I", requisitos: [], abre: ["DIS2"] },
+  { id: "DIS2", nombre: "Diseño II", requisitos: ["DIS1"], abre: ["DIS3"] },
+  { id: "DIS3", nombre: "Diseño III", requisitos: ["DIS2"], abre: ["DIS4"] },
+  { id: "DIS4", nombre: "Diseño IV", requisitos: ["DIS3"], abre: ["DG1", "FOT1"] },
+  { id: "DG1", nombre: "Diseño Gráfico I", requisitos: ["DIS4"], abre: ["DG2"] },
+  { id: "DG2", nombre: "Diseño Gráfico II", requisitos: ["DG1"], abre: ["DG3"] },
+  { id: "DG3", nombre: "Diseño Gráfico III", requisitos: ["DG2"], abre: ["DI"] },
+  { id: "DI", nombre: "Diseño Interactivo", requisitos: ["DG3", "TG3", "SR3"], abre: ["TE1"] },
+  { id: "DIB1", nombre: "Dibujo I", requisitos: [], abre: ["DIB2"] },
+  { id: "DIB2", nombre: "Dibujo II", requisitos: ["DIB1"], abre: ["DIB3"] },
+  { id: "DIB3", nombre: "Dibujo III", requisitos: ["DIB2"], abre: ["DIB4"] },
+  { id: "DIB4", nombre: "Dibujo IV", requisitos: ["DIB3"], abre: ["TG1", "DO1", "DO2", "DO3", "TO1", "TO2"] },
+  { id: "DO1", nombre: "Dibujo optativo I", requisitos: ["DIB4"] },
+  { id: "DO2", nombre: "Dibujo optativo II", requisitos: ["DIB4"] },
+  { id: "DO3", nombre: "Dibujo optativo III", requisitos: ["DIB4"] },
+  { id: "TPIG", nombre: "Taller de pigmentos", requisitos: [], abre: ["TG1"] },
+  { id: "TG1", nombre: "Taller Gráfico I", requisitos: ["TPIG", "DIB4"], abre: ["TG2"] },
+  { id: "TG2", nombre: "Taller Gráfico II", requisitos: ["TG1"], abre: ["TG3"] },
+  { id: "TG3", nombre: "Taller Gráfico III", requisitos: ["TG2"] },
+  { id: "FOT1", nombre: "Fotografía I", requisitos: ["DIS4", "TI"], abre: ["FOT2"] },
+  { id: "FOT2", nombre: "Fotografía II", requisitos: ["FOT1"], abre: ["FOT3"] },
+  { id: "FOT3", nombre: "Fotografía III", requisitos: ["FOT2"] },
+  { id: "TI", nombre: "Taller de iluminación", requisitos: [], abre: ["FOT1"] },
+  { id: "MD1", nombre: "Medios Digitales I", requisitos: [], abre: ["MD2"] },
+  { id: "MD2", nombre: "Medios Digitales II", requisitos: ["MD1"], abre: ["MD3"] },
+  { id: "MD3", nombre: "Medios Digitales III", requisitos: ["MD2"] },
+  { id: "SR1", nombre: "Sistemas de Reproducción I", requisitos: ["TPT"], abre: ["SR2"] },
+  { id: "SR2", nombre: "Sistemas de Reproducción II", requisitos: ["SR1"], abre: ["SR3"] },
+  { id: "SR3", nombre: "Sistemas de Reproducción III", requisitos: ["SR2"] },
+  { id: "TPT", nombre: "Taller de papel y textil", requisitos: [] },
+  { id: "TE1", nombre: "Taller especializado I", requisitos: ["DI"] },
+  { id: "TE2", nombre: "Taller especializado II", requisitos: ["TE1"] },
+];
+
+const estadoRamos = {};
+const malla = document.getElementById("malla");
+
+// Renderiza los ramos
+ramosData.forEach(ramo => {
+  const div = document.createElement("div");
+  div.classList.add("ramo");
+  div.dataset.id = ramo.id;
+  div.textContent = ramo.nombre;
+  malla.appendChild(div);
+
+  estadoRamos[ramo.id] = {
+    aprobado: false,
+    requisitos: ramo.requisitos,
+    abre: ramo.abre || []
+  };
+});
+
+// Desbloquea los ramos sin requisitos
+Object.entries(estadoRamos).forEach(([id, info]) => {
+  if (info.requisitos.length === 0) desbloquear(id);
+});
+
+function desbloquear(id) {
+  const el = document.querySelector(`.ramo[data-id='${id}']`);
+  if (el && !estadoRamos[id].aprobado) {
+    el.classList.add("desbloqueado");
+    el.addEventListener("click", () => aprobar(id));
+  }
+}
+
+function aprobar(id) {
+  const el = document.querySelector(`.ramo[data-id='${id}']`);
+  if (!estadoRamos[id].aprobado && el.classList.contains("desbloqueado")) {
+    estadoRamos[id].aprobado = true;
+    el.classList.add("aprobado");
+    estadoRamos[id].abre.forEach(dest => {
+      if (estadoRamos[dest].requisitos.every(req => estadoRamos[req]?.aprobado)) {
+        desbloquear(dest);
+      }
+    });
+  }
+}
 
