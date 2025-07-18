@@ -1,85 +1,139 @@
-const ramosData = [
-  { id: "HUM1", nombre: "Humanidades 1", requisitos: [], abre: ["HUM2"] },
-  { id: "HUM2", nombre: "Humanidades 2", requisitos: ["HUM1"], abre: ["SRN1"] },
-  { id: "SRN1", nombre: "Seminario Realidad Nacional 1", requisitos: ["HUM2"], abre: ["SRN2"] },
-  { id: "SRN2", nombre: "Seminario Realidad Nacional 2", requisitos: ["SRN1"] },
-  { id: "ACUL", nombre: "Actividad cultural", requisitos: [] },
-  { id: "ADEP", nombre: "Actividad deportiva", requisitos: [] },
-  { id: "DIS1", nombre: "Diseño I", requisitos: [], abre: ["DIS2"] },
-  { id: "DIS2", nombre: "Diseño II", requisitos: ["DIS1"], abre: ["DIS3"] },
-  { id: "DIS3", nombre: "Diseño III", requisitos: ["DIS2"], abre: ["DIS4"] },
-  { id: "DIS4", nombre: "Diseño IV", requisitos: ["DIS3"], abre: ["DG1", "FOT1"] },
-  { id: "DG1", nombre: "Diseño Gráfico I", requisitos: ["DIS4"], abre: ["DG2"] },
-  { id: "DG2", nombre: "Diseño Gráfico II", requisitos: ["DG1"], abre: ["DG3"] },
-  { id: "DG3", nombre: "Diseño Gráfico III", requisitos: ["DG2"], abre: ["DI"] },
-  { id: "DI", nombre: "Diseño Interactivo", requisitos: ["DG3", "TG3", "SR3"], abre: ["TE1"] },
-  { id: "DIB1", nombre: "Dibujo I", requisitos: [], abre: ["DIB2"] },
-  { id: "DIB2", nombre: "Dibujo II", requisitos: ["DIB1"], abre: ["DIB3"] },
-  { id: "DIB3", nombre: "Dibujo III", requisitos: ["DIB2"], abre: ["DIB4"] },
-  { id: "DIB4", nombre: "Dibujo IV", requisitos: ["DIB3"], abre: ["TG1", "DO1", "DO2", "DO3", "TO1", "TO2"] },
-  { id: "DO1", nombre: "Dibujo optativo I", requisitos: ["DIB4"] },
-  { id: "DO2", nombre: "Dibujo optativo II", requisitos: ["DIB4"] },
-  { id: "DO3", nombre: "Dibujo optativo III", requisitos: ["DIB4"] },
-  { id: "TPIG", nombre: "Taller de pigmentos", requisitos: [], abre: ["TG1"] },
-  { id: "TG1", nombre: "Taller Gráfico I", requisitos: ["TPIG", "DIB4"], abre: ["TG2"] },
-  { id: "TG2", nombre: "Taller Gráfico II", requisitos: ["TG1"], abre: ["TG3"] },
-  { id: "TG3", nombre: "Taller Gráfico III", requisitos: ["TG2"] },
-  { id: "FOT1", nombre: "Fotografía I", requisitos: ["DIS4", "TI"], abre: ["FOT2"] },
-  { id: "FOT2", nombre: "Fotografía II", requisitos: ["FOT1"], abre: ["FOT3"] },
-  { id: "FOT3", nombre: "Fotografía III", requisitos: ["FOT2"] },
-  { id: "TI", nombre: "Taller de iluminación", requisitos: [], abre: ["FOT1"] },
-  { id: "MD1", nombre: "Medios Digitales I", requisitos: [], abre: ["MD2"] },
-  { id: "MD2", nombre: "Medios Digitales II", requisitos: ["MD1"], abre: ["MD3"] },
-  { id: "MD3", nombre: "Medios Digitales III", requisitos: ["MD2"] },
-  { id: "SR1", nombre: "Sistemas de Reproducción I", requisitos: ["TPT"], abre: ["SR2"] },
-  { id: "SR2", nombre: "Sistemas de Reproducción II", requisitos: ["SR1"], abre: ["SR3"] },
-  { id: "SR3", nombre: "Sistemas de Reproducción III", requisitos: ["SR2"] },
-  { id: "TPT", nombre: "Taller de papel y textil", requisitos: [] },
-  { id: "TE1", nombre: "Taller especializado I", requisitos: ["DI"] },
-  { id: "TE2", nombre: "Taller especializado II", requisitos: ["TE1"] },
+const ramos = [
+  // Primer año
+  { nombre: "Humanidades 1", abre: ["Humanidades 2"] },
+  { nombre: "Actividad cultural" },
+  { nombre: "Actividad deportiva" },
+  { nombre: "Diseño I", abre: ["Diseño II"] },
+  { nombre: "Dibujo I", abre: ["Dibujo II"] },
+  { nombre: "Taller de pigmentos", abre: ["Taller Gráfico I"] },
+  { nombre: "Taller de arcilla" },
+  { nombre: "Humanidades 2", abre: ["Seminario Realidad Nacional 1"], requiere: ["Humanidades 1"] },
+  { nombre: "Teoría del arte", abre: ["Semiosis de la producción"] },
+  { nombre: "Diseño II", abre: ["Diseño III"], requiere: ["Diseño I"] },
+  { nombre: "Dibujo II", abre: ["Dibujo III"], requiere: ["Dibujo I"] },
+  { nombre: "Taller de madera" },
+  { nombre: "Taller de papel y textil", abre: ["Sistemas de Reproducción I"] },
+
+  // Segundo año
+  { nombre: "Introducción al arte 1", abre: ["Introducción al arte 2"] },
+  { nombre: "Introducción a la Antropología" },
+  { nombre: "Diseño III", abre: ["Diseño IV"], requiere: ["Diseño II"] },
+  { nombre: "Dibujo III", abre: ["Dibujo IV"], requiere: ["Dibujo II"] },
+  { nombre: "Taller de vidrio y plástico" },
+  { nombre: "Taller de metal" },
+  { nombre: "Introducción al arte 2", abre: ["Arte Costarricense", "Historia del Diseño Gráfico"], requiere: ["Introducción al arte 1"] },
+  { nombre: "Semiosis de la producción", requiere: ["Teoría del arte"] },
+  { nombre: "Repertorio" },
+  { nombre: "Diseño IV", abre: ["Diseño Gráfico I", "Fotografía I"], requiere: ["Diseño III"] },
+  { nombre: "Dibujo IV", abre: ["Taller Gráfico I", "Dibujo optativo I", "Dibujo optativo II", "Dibujo optativo III", "Taller optativo I", "Taller optativo II"], requiere: ["Dibujo III"] },
+  { nombre: "Taller de iluminación", abre: ["Fotografía I"] },
+  { nombre: "Taller de piedra" },
+
+  // Tercer año
+  { nombre: "Arte Costarricense" },
+  { nombre: "Dibujo optativo I" },
+  { nombre: "Diseño Gráfico I", abre: ["Diseño Gráfico II"], requiere: ["Diseño IV"] },
+  { nombre: "Taller Gráfico I", abre: ["Taller Gráfico II"], requiere: ["Dibujo IV", "Taller de pigmentos"] },
+  { nombre: "Fotografía I", abre: ["Fotografía II"], requiere: ["Taller de iluminación", "Diseño IV"] },
+  { nombre: "Medios Digitales I", abre: ["Medios Digitales II"] },
+  { nombre: "Sistemas de Reproducción I", abre: ["Sistemas de Reproducción II"], requiere: ["Taller de papel y textil"] },
+  { nombre: "Historia del Diseño Gráfico" },
+  { nombre: "Seminario de Realidad Nacional 1", abre: ["Seminario de Realidad Nacional 2"], requiere: ["Humanidades 2"] },
+  { nombre: "Diseño Gráfico II", abre: ["Diseño Gráfico III"], requiere: ["Diseño Gráfico I"] },
+  { nombre: "Taller Gráfico II", abre: ["Taller Gráfico III"], requiere: ["Taller Gráfico I"] },
+  { nombre: "Fotografía II", abre: ["Fotografía III"], requiere: ["Fotografía I"] },
+  { nombre: "Medios Digitales II", abre: ["Medios Digitales III"], requiere: ["Medios Digitales I"] },
+  { nombre: "Sistemas de Reproducción II", abre: ["Sistemas de Reproducción III"], requiere: ["Sistemas de Reproducción I"] },
+
+  // Cuarto año
+  { nombre: "Historia del arte optativa I" },
+  { nombre: "Idioma" },
+  { nombre: "Diseño Gráfico III", abre: ["Diseño Interactivo"], requiere: ["Diseño Gráfico II"] },
+  { nombre: "Taller Gráfico III", abre: ["Diseño Interactivo"], requiere: ["Taller Gráfico II"] },
+  { nombre: "Fotografía III", requiere: ["Fotografía II"] },
+  { nombre: "Medios Digitales III", requiere: ["Medios Digitales II"] },
+  { nombre: "Sistemas de Reproducción III", abre: ["Diseño Interactivo"], requiere: ["Sistemas de Reproducción II"] },
+  { nombre: "Historia del arte optativa II" },
+  { nombre: "Seminario de Realidad Nacional 2", requiere: ["Seminario de Realidad Nacional 1"] },
+  { nombre: "Taller Optativo I", requiere: ["Dibujo IV"] },
+  { nombre: "Taller Optativo II", requiere: ["Dibujo IV"] },
+  { nombre: "Dibujo optativo II", requiere: ["Dibujo IV"] },
+  { nombre: "Dibujo optativo III", requiere: ["Dibujo IV"] },
+  { nombre: "Diseño Interactivo", abre: ["Taller especializado I"], requiere: ["Diseño Gráfico III", "Taller Gráfico III", "Sistemas de Reproducción III"] },
+
+  // Quinto año
+  { nombre: "Taller Optativo III" },
+  { nombre: "Taller Optativo IV" },
+  { nombre: "Taller Optativo V" },
+  { nombre: "Técnicas de Investigación" },
+  { nombre: "Taller especializado I", abre: ["Taller especializado II"], requiere: ["Diseño Interactivo"] },
+  { nombre: "Taller Optativo VI" },
+  { nombre: "Taller Optativo VII" },
+  { nombre: "Adm. De las artes" },
+  { nombre: "Taller especializado II", requiere: ["Taller especializado I"] },
 ];
 
-const estadoRamos = {};
-const malla = document.getElementById("malla");
+const contenedor = document.getElementById("malla");
+const semestres = [...new Set(ramos.map(r => r.semestre))];
 
-// Renderiza los ramos
-ramosData.forEach(ramo => {
-  const div = document.createElement("div");
-  div.classList.add("ramo");
-  div.dataset.id = ramo.id;
-  div.textContent = ramo.nombre;
-  malla.appendChild(div);
+semestres.forEach(sem => {
+  const section = document.createElement("div");
+  section.classList.add("semestre");
 
-  estadoRamos[ramo.id] = {
-    aprobado: false,
-    requisitos: ramo.requisitos,
-    abre: ramo.abre || []
-  };
+  const h2 = document.createElement("h2");
+  h2.textContent = sem;
+  section.appendChild(h2);
+
+  const grid = document.createElement("div");
+  grid.classList.add("contenido-semestre");
+
+  ramos.forEach((ramo, i) => {
+    if (ramo.semestre !== sem) return;
+
+    const div = document.createElement("div");
+    div.classList.add("ramo");
+    div.textContent = ramo.nombre;
+    div.dataset.index = i;
+
+    if (ramo.requiere) div.classList.add("bloqueado");
+
+    grid.appendChild(div);
+  });
+
+  section.appendChild(grid);
+  contenedor.appendChild(section);
 });
 
-// Desbloquea los ramos sin requisitos
-Object.entries(estadoRamos).forEach(([id, info]) => {
-  if (info.requisitos.length === 0) desbloquear(id);
-});
-
-function desbloquear(id) {
-  const el = document.querySelector(`.ramo[data-id='${id}']`);
-  if (el && !estadoRamos[id].aprobado) {
-    el.classList.add("desbloqueado");
-    el.addEventListener("click", () => aprobar(id));
-  }
+function actualizarRamos() {
+  document.querySelectorAll(".ramo").forEach(div => {
+    const index = parseInt(div.dataset.index);
+    const ramo = ramos[index];
+    if (ramo.requiere) {
+      const desbloqueado = ramo.requiere.every(req =>
+        document.querySelector(`.ramo[data-index="${ramos.findIndex(r => r.nombre === req)}"]`).classList.contains("aprobado")
+      );
+      div.classList.toggle("bloqueado", !desbloqueado);
+    }
+  });
 }
 
-function aprobar(id) {
-  const el = document.querySelector(`.ramo[data-id='${id}']`);
-  if (!estadoRamos[id].aprobado && el.classList.contains("desbloqueado")) {
-    estadoRamos[id].aprobado = true;
-    el.classList.add("aprobado");
-    estadoRamos[id].abre.forEach(dest => {
-      if (estadoRamos[dest].requisitos.every(req => estadoRamos[req]?.aprobado)) {
-        desbloquear(dest);
+document.getElementById("malla").addEventListener("click", e => {
+  if (!e.target.classList.contains("ramo")) return;
+  const div = e.target;
+  const index = parseInt(div.dataset.index);
+  const ramo = ramos[index];
+  if (div.classList.contains("bloqueado")) return;
+  div.classList.toggle("aprobado");
+
+  // Abrir dependencias
+  if (ramo.abre) {
+    ramo.abre.forEach(abierto => {
+      const i = ramos.findIndex(r => r.nombre === abierto);
+      if (i !== -1) {
+        const target = document.querySelector(`.ramo[data-index="${i}"]`);
+        if (!target.classList.contains("aprobado")) {
+          target.classList.remove("bloqueado");
+        }
       }
     });
   }
-}
-
