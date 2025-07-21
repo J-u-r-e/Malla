@@ -94,4 +94,121 @@
       { id: "hum1", nombre: "Humanidades 1", semestre: "I Semestre", desbloquea: ["hum2"] },
       { id: "actcult", nombre: "Actividad cultural", semestre: "I Semestre" },
       { id: "actdeport", nombre: "Actividad deportiva", semestre: "I Semestre" },
-      {
+      { id: "dis1", nombre: "Diseño I", semestre: "I Semestre", desbloquea: ["dis2"] },
+      { id: "dib1", nombre: "Dibujo I", semestre: "I Semestre", desbloquea: ["dib2"] },
+      { id: "pigmentos", nombre: "Taller de pigmentos", semestre: "I Semestre", desbloquea: ["tallgraf1"] },
+      { id: "arcilla", nombre: "Taller de arcilla", semestre: "I Semestre" },
+
+      { id: "hum2", nombre: "Humanidades 2", semestre: "II Semestre", requisitos: ["hum1"], desbloquea: ["semreal1"] },
+      { id: "teoarte", nombre: "Teoría del arte", semestre: "II Semestre", desbloquea: ["semiosis"] },
+      { id: "dis2", nombre: "Diseño II", semestre: "II Semestre", requisitos: ["dis1"], desbloquea: ["dis3"] },
+      { id: "dib2", nombre: "Dibujo II", semestre: "II Semestre", requisitos: ["dib1"], desbloquea: ["dib3"] },
+      { id: "madera", nombre: "Taller de madera", semestre: "II Semestre" },
+      { id: "papel", nombre: "Taller de papel y textil", semestre: "II Semestre", desbloquea: ["sisrep1"] },
+
+      { id: "arte1", nombre: "Introducción al arte 1", semestre: "III Semestre", desbloquea: ["arte2"] },
+      { id: "antro", nombre: "Introducción a la Antropología", semestre: "III Semestre" },
+      { id: "dis3", nombre: "Diseño III", semestre: "III Semestre", requisitos: ["dis2"], desbloquea: ["dis4"] },
+      { id: "dib3", nombre: "Dibujo III", semestre: "III Semestre", requisitos: ["dib2"], desbloquea: ["dib4"] },
+      { id: "vidrio", nombre: "Taller de vidrio y plástico", semestre: "III Semestre" },
+      { id: "metal", nombre: "Taller de metal", semestre: "III Semestre" },
+
+      { id: "arte2", nombre: "Introducción al arte 2", semestre: "IV Semestre", requisitos: ["arte1"], desbloquea: ["artecr", "histdg"] },
+      { id: "semiosis", nombre: "Semiosis de la producción", semestre: "IV Semestre", requisitos: ["teoarte"] },
+      { id: "repertorio", nombre: "Repertorio", semestre: "IV Semestre" },
+      { id: "dis4", nombre: "Diseño IV", semestre: "IV Semestre", requisitos: ["dis3"], desbloquea: ["disgraf1", "foto1"] },
+      { id: "dib4", nombre: "Dibujo IV", semestre: "IV Semestre", requisitos: ["dib3"], desbloquea: ["tallgraf1", "dibopt1", "dibopt2", "dibopt3", "tallopt1", "tallopt2"] },
+      { id: "iluminacion", nombre: "Taller de iluminación", semestre: "IV Semestre", desbloquea: ["foto1"] },
+      { id: "piedra", nombre: "Taller de piedra", semestre: "IV Semestre" },
+
+      { id: "artecr", nombre: "Arte Costarricense", semestre: "V Semestre" },
+      { id: "dibopt1", nombre: "Dibujo optativo I", semestre: "V Semestre" },
+      { id: "disgraf1", nombre: "Diseño Gráfico I", semestre: "V Semestre", requisitos: ["dis4"], desbloquea: ["disgraf2"] },
+      { id: "tallgraf1", nombre: "Taller Gráfico I", semestre: "V Semestre", requisitos: ["pigmentos", "dib4"], desbloquea: ["tallgraf2"] },
+      { id: "foto1", nombre: "Fotografía I", semestre: "V Semestre", requisitos: ["dis4", "iluminacion"], desbloquea: ["foto2"] },
+      { id: "medios1", nombre: "Medios Digitales I", semestre: "V Semestre", desbloquea: ["medios2"] },
+      { id: "sisrep1", nombre: "Sistemas de Reproducción I", semestre: "V Semestre", requisitos: ["papel"], desbloquea: ["sisrep2"] },
+
+      { id: "histdg", nombre: "Historia del Diseño Gráfico", semestre: "VI Semestre" },
+      { id: "semreal1", nombre: "Seminario de Realidad Nacional 1", semestre: "VI Semestre", requisitos: ["hum2"], desbloquea: ["semreal2"] },
+      { id: "disgraf2", nombre: "Diseño Gráfico II", semestre: "VI Semestre", requisitos: ["disgraf1"], desbloquea: ["disgraf3"] },
+      { id: "tallgraf2", nombre: "Taller Gráfico II", semestre: "VI Semestre", requisitos: ["tallgraf1"], desbloquea: ["tallgraf3"] },
+      { id: "foto2", nombre: "Fotografía II", semestre: "VI Semestre", requisitos: ["foto1"], desbloquea: ["foto3"] },
+      { id: "medios2", nombre: "Medios Digitales II", semestre: "VI Semestre", requisitos: ["medios1"], desbloquea: ["medios3"] },
+      { id: "sisrep2", nombre: "Sistemas de Reproducción II", semestre: "VI Semestre", requisitos: ["sisrep1"], desbloquea: ["sisrep3"] },
+
+      { id: "histopt1", nombre: "Historia del arte optativa I", semestre: "VII Semestre" },
+      { id: "idioma", nombre: "Idioma", semestre: "VII Semestre" },
+      { id: "disgraf3", nombre: "Diseño Gráfico III", semestre: "VII Semestre", requisitos: ["disgraf2"], desbloquea: ["interactivo"] },
+      { id: "tallgraf3", nombre: "Taller Gráfico III", semestre: "VII Semestre", requisitos: ["tallgraf2"], desbloquea: ["interactivo"] },
+      { id: "foto3", nombre: "Fotografía III", semestre: "VII Semestre", requisitos: ["foto2"] },
+      { id: "medios3", nombre: "Medios Digitales III", semestre: "VII Semestre", requisitos: ["medios2"] },
+      { id: "sisrep3", nombre: "Sistemas de Reproducción III", semestre: "VII Semestre", requisitos: ["sisrep2"], desbloquea: ["interactivo"] },
+
+      { id: "histopt2", nombre: "Historia del arte optativa II", semestre: "VIII Semestre" },
+      { id: "semreal2", nombre: "Seminario de Realidad Nacional 2", semestre: "VIII Semestre", requisitos: ["semreal1"] },
+      { id: "tallopt1", nombre: "Taller Optativo I", semestre: "VIII Semestre", requisitos: ["dib4"] },
+      { id: "tallopt2", nombre: "Taller Optativo II", semestre: "VIII Semestre", requisitos: ["dib4"] },
+      { id: "dibopt2", nombre: "Dibujo optativo II", semestre: "VIII Semestre", requisitos: ["dib4"] },
+      { id: "dibopt3", nombre: "Dibujo optativo III", semestre: "VIII Semestre", requisitos: ["dib4"] },
+      { id: "interactivo", nombre: "Diseño Interactivo", semestre: "VIII Semestre", requisitos: ["disgraf3", "tallgraf3", "sisrep3"], desbloquea: ["tallesp1"] },
+
+      { id: "tallopt3", nombre: "Taller Optativo III", semestre: "IX Semestre" },
+      { id: "tallopt4", nombre: "Taller Optativo IV", semestre: "IX Semestre" },
+      { id: "tallopt5", nombre: "Taller Optativo V", semestre: "IX Semestre" },
+      { id: "invtec", nombre: "Técnicas de Investigación", semestre: "IX Semestre" },
+      { id: "tallesp1", nombre: "Taller especializado I", semestre: "IX Semestre", requisitos: ["interactivo"] },
+
+      { id: "tallopt6", nombre: "Taller Optativo VI", semestre: "X Semestre" },
+      { id: "tallopt7", nombre: "Taller Optativo VII", semestre: "X Semestre" },
+      { id: "adm", nombre: "Adm. De las artes", semestre: "X Semestre" },
+      { id: "tallesp2", nombre: "Taller especializado II", semestre: "X Semestre" },
+    ];
+
+    const estado = JSON.parse(localStorage.getItem("mallaEstado") || "{}");
+    const contenedor = document.getElementById("malla");
+
+    const porSemestre = {};
+    cursos.forEach(curso => {
+      if (!porSemestre[curso.semestre]) porSemestre[curso.semestre] = [];
+      porSemestre[curso.semestre].push(curso);
+    });
+
+    for (const [semestre, lista] of Object.entries(porSemestre)) {
+      const columna = document.createElement("div");
+      columna.className = "semestre";
+      columna.innerHTML = `<h2>${semestre}</h2>`;
+      lista.forEach(curso => {
+        const divCurso = document.createElement("div");
+        divCurso.className = "curso";
+        divCurso.textContent = curso.nombre;
+        divCurso.dataset.id = curso.id;
+
+        const aprobado = estado[curso.id];
+        const requisitosOk = !curso.requisitos || curso.requisitos.every(r => estado[r]);
+
+        if (!requisitosOk) {
+          divCurso.classList.add("locked");
+          const faltantes = curso.requisitos.filter(r => !estado[r]);
+          const nombres = cursos.filter(c => faltantes.includes(c.id)).map(c => c.nombre);
+          divCurso.dataset.tooltip = `Requiere: ${nombres.join(", ")}`;
+        }
+
+        if (aprobado) {
+          divCurso.classList.add("approved");
+        }
+
+        divCurso.addEventListener("click", () => {
+          estado[curso.id] = !estado[curso.id];
+          localStorage.setItem("mallaEstado", JSON.stringify(estado));
+          location.reload();
+        });
+
+        columna.appendChild(divCurso);
+      });
+
+      contenedor.appendChild(columna);
+    }
+  </script>
+</body>
+</html>
