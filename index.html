@@ -2,228 +2,202 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Malla Curricular Diseño Gráfico</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: #fefefe;
+      background-color: #f9f9fb;
       margin: 0;
-      padding: 2rem;
+      padding: 20px;
       color: #333;
     }
     h1 {
       text-align: center;
-      color: #5a4e7c;
+      color: #6a5acd;
     }
     .malla {
       display: grid;
       grid-template-columns: repeat(10, 1fr);
-      gap: 1rem;
-      margin-top: 2rem;
+      gap: 10px;
+      margin-top: 20px;
     }
     .semestre {
-      background: #faf8ff;
-      border: 1px solid #e5e0f0;
+      background-color: #e6f4ea;
       border-radius: 10px;
-      padding: 0.5rem;
+      padding: 10px;
     }
     .semestre h2 {
-      text-align: center;
-      background: #e5dbff;
-      padding: 0.3rem;
-      border-radius: 5px;
-      color: #4b3f71;
       font-size: 1rem;
-    }
-    .materia {
-      background: #d6f7ec;
-      border: 1px solid #9ddac0;
-      border-radius: 6px;
-      margin: 0.4rem 0;
-      padding: 0.4rem;
       text-align: center;
+      background-color: #dcd0ff;
+      border-radius: 6px;
+      padding: 5px;
+    }
+    .curso {
+      margin: 5px 0;
+      padding: 8px;
+      background-color: #ffffff;
+      border: 2px solid #dcd0ff;
+      border-radius: 6px;
       cursor: pointer;
+      text-align: center;
       font-size: 0.9rem;
-      transition: background 0.3s;
     }
-    .materia:hover {
-      background-color: #bdf0dc;
-    }
-    .materia.bloqueada {
-      background: #f2f2f2;
+    .bloqueado {
+      background-color: #f0f0f0;
+      border-color: #ccc;
       color: #aaa;
       cursor: not-allowed;
-      border: 1px dashed #ccc;
+      position: relative;
     }
-    .materia.bloqueada:hover::after {
+    .bloqueado:hover::after {
       content: attr(data-tooltip);
       position: absolute;
-      background: #333;
-      color: white;
-      padding: 5px;
-      font-size: 0.75rem;
-      border-radius: 5px;
       top: 100%;
-      left: 50%;
-      transform: translateX(-50%);
+      left: 0;
+      background: #333;
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 5px;
       white-space: nowrap;
+      font-size: 0.8rem;
+      margin-top: 5px;
       z-index: 10;
     }
-    .materia.aprobada {
-      background-color: #dadbff;
-      border-color: #b0b1f0;
-      text-decoration: line-through;
-    }
-    .acciones {
-      margin-top: 2rem;
-      text-align: center;
-    }
-    .acciones button {
-      background: #cdbfff;
-      border: none;
-      padding: 0.6rem 1.2rem;
-      border-radius: 6px;
-      cursor: pointer;
+    .aprobado {
+      background-color: #b4f8c8;
+      border-color: #7de6a3;
       color: #333;
-      font-weight: bold;
-      transition: background 0.3s;
-    }
-    .acciones button:hover {
-      background: #b7a7f0;
     }
   </style>
 </head>
 <body>
-  <h1>Malla Curricular - Diseño Gráfico</h1>
-  <div class="malla" id="mallaContainer"></div>
-
-  <div class="acciones">
-    <button onclick="reiniciarMalla()">Reiniciar Progreso</button>
-  </div>
+  <h1>Malla Curricular Diseño Gráfico</h1>
+  <div class="malla" id="malla"></div>
 
   <script>
-    const materias = [
-      // id, nombre, semestre, requisitos
-      ["hum1", "Humanidades 1", 1, []],
-      ["actCult", "Actividad cultural", 1, []],
-      ["actDeport", "Actividad deportiva", 1, []],
-      ["dis1", "Diseño I", 1, []],
-      ["dib1", "Dibujo I", 1, []],
-      ["pig", "Taller de pigmentos", 1, []],
-      ["arcilla", "Taller de arcilla", 1, []],
-      ["hum2", "Humanidades 2", 2, ["hum1"]],
-      ["ta", "Teoría del arte", 2, []],
-      ["dis2", "Diseño II", 2, ["dis1"]],
-      ["dib2", "Dibujo II", 2, ["dib1"]],
-      ["madera", "Taller de madera", 2, []],
-      ["papelTextil", "Taller papel/textil", 2, []],
-      ["arte1", "Introducción al arte 1", 3, []],
-      ["antropo", "Introducción a la Antropología", 3, []],
-      ["dis3", "Diseño III", 3, ["dis2"]],
-      ["dib3", "Dibujo III", 3, ["dib2"]],
-      ["vidrio", "Taller vidrio/plástico", 3, []],
-      ["metal", "Taller de metal", 3, []],
-      ["arte2", "Introducción al arte 2", 4, ["arte1"]],
-      ["semiosis", "Semiosis de la producción", 4, ["ta"]],
-      ["repertorio", "Repertorio", 4, []],
-      ["dis4", "Diseño IV", 4, ["dis3"]],
-      ["dib4", "Dibujo IV", 4, ["dib3"]],
-      ["iluminacion", "Taller de iluminación", 4, []],
-      ["piedra", "Taller de piedra", 4, []],
-      ["arteCR", "Arte Costarricense", 5, ["arte2"]],
-      ["dibOpt1", "Dibujo optativo I", 5, ["dib4"]],
-      ["disGraf1", "Diseño Gráfico I", 5, ["dis4"]],
-      ["tg1", "Taller Gráfico I", 5, ["pig", "dib4"]],
-      ["foto1", "Fotografía I", 5, ["iluminacion", "dis4"]],
-      ["medios1", "Medios Digitales I", 5, []],
-      ["sr1", "Sistemas de Reproducción I", 5, ["papelTextil"]],
-      ["histDG", "Historia del Diseño Gráfico", 6, []],
-      ["semRN1", "Sem. Realidad Nacional 1", 6, ["hum2"]],
-      ["disGraf2", "Diseño Gráfico II", 6, ["disGraf1"]],
-      ["tg2", "Taller Gráfico II", 6, ["tg1"]],
-      ["foto2", "Fotografía II", 6, ["foto1"]],
-      ["medios2", "Medios Digitales II", 6, ["medios1"]],
-      ["sr2", "Sistemas de Reproducción II", 6, ["sr1"]],
-      ["histOpt1", "Historia del arte opt. I", 7, []],
-      ["idioma", "Idioma", 7, []],
-      ["disGraf3", "Diseño Gráfico III", 7, ["disGraf2"]],
-      ["tg3", "Taller Gráfico III", 7, ["tg2"]],
-      ["foto3", "Fotografía III", 7, ["foto2"]],
-      ["medios3", "Medios Digitales III", 7, ["medios2"]],
-      ["sr3", "Sistemas de Reproducción III", 7, ["sr2"]],
-      ["histOpt2", "Historia del arte opt. II", 8, []],
-      ["semRN2", "Sem. Realidad Nacional 2", 8, ["semRN1"]],
-      ["tOpt1", "Taller Optativo I", 8, []],
-      ["tOpt2", "Taller Optativo II", 8, []],
-      ["dibOpt2", "Dibujo optativo II", 8, ["dib4"]],
-      ["dibOpt3", "Dibujo optativo III", 8, ["dib4"]],
-      ["disInteract", "Diseño Interactivo", 8, ["disGraf3", "tg3", "sr3"]],
-      ["tOpt3", "Taller Optativo III", 9, []],
-      ["tOpt4", "Taller Optativo IV", 9, []],
-      ["tOpt5", "Taller Optativo V", 9, []],
-      ["inv", "Técnicas de Investigación", 9, []],
-      ["tEsp1", "Taller especializado I", 9, ["disInteract"]],
-      ["tOpt6", "Taller Optativo VI", 10, []],
-      ["tOpt7", "Taller Optativo VII", 10, []],
-      ["adm", "Administración de las artes", 10, []],
-      ["tEsp2", "Taller especializado II", 10, ["tEsp1"]]
+    const cursos = [
+      // Primer año
+      { nombre: "Humanidades 1", semestre: 1, abre: ["Humanidades 2"] },
+      { nombre: "Actividad cultural", semestre: 1 },
+      { nombre: "Actividad deportiva", semestre: 1 },
+      { nombre: "Diseño I", semestre: 1, abre: ["Diseño II"] },
+      { nombre: "Dibujo I", semestre: 1, abre: ["Dibujo II"] },
+      { nombre: "Taller de pigmentos", semestre: 1, abre: ["Taller Gráfico I"] },
+      { nombre: "Taller de arcilla", semestre: 1 },
+      { nombre: "Humanidades 2", semestre: 2, req: ["Humanidades 1"], abre: ["Seminario Realidad Nacional 1"] },
+      { nombre: "Teoría del arte", semestre: 2, abre: ["Semiosis de la producción"] },
+      { nombre: "Diseño II", semestre: 2, req: ["Diseño I"], abre: ["Diseño III"] },
+      { nombre: "Dibujo II", semestre: 2, req: ["Dibujo I"], abre: ["Dibujo III"] },
+      { nombre: "Taller de madera", semestre: 2 },
+      { nombre: "Taller de papel y textil", semestre: 2, abre: ["Sistemas de Reproducción I"] },
+
+      // Segundo año
+      { nombre: "Introducción al arte 1", semestre: 3, abre: ["Introducción al arte 2"] },
+      { nombre: "Introducción a la Antropología", semestre: 3 },
+      { nombre: "Diseño III", semestre: 3, req: ["Diseño II"], abre: ["Diseño IV"] },
+      { nombre: "Dibujo III", semestre: 3, req: ["Dibujo II"], abre: ["Dibujo IV"] },
+      { nombre: "Taller de vidrio y plástico", semestre: 3 },
+      { nombre: "Taller de metal", semestre: 3 },
+      { nombre: "Introducción al arte 2", semestre: 4, req: ["Introducción al arte 1"], abre: ["Arte Costarricense", "Historia del Diseño Gráfico"] },
+      { nombre: "Semiosis de la producción", semestre: 4, req: ["Teoría del arte"] },
+      { nombre: "Repertorio", semestre: 4 },
+      { nombre: "Diseño IV", semestre: 4, req: ["Diseño III"], abre: ["Diseño Gráfico I", "Fotografía I"] },
+      { nombre: "Dibujo IV", semestre: 4, req: ["Dibujo III"], abre: ["Dibujo optativo I", "Dibujo optativo II", "Dibujo optativo III", "Taller optativo I", "Taller optativo II", "Taller Gráfico I"] },
+      { nombre: "Taller de iluminación", semestre: 4, abre: ["Fotografía I"] },
+      { nombre: "Taller de piedra", semestre: 4 },
+
+      // Tercer año
+      { nombre: "Arte Costarricense", semestre: 5 },
+      { nombre: "Dibujo optativo I", semestre: 5 },
+      { nombre: "Diseño Gráfico I", semestre: 5, req: ["Diseño IV"], abre: ["Diseño Gráfico II"] },
+      { nombre: "Taller Gráfico I", semestre: 5, req: ["Dibujo IV", "Taller de pigmentos"], abre: ["Taller Gráfico II"] },
+      { nombre: "Fotografía I", semestre: 5, req: ["Diseño IV", "Taller de iluminación"], abre: ["Fotografía II"] },
+      { nombre: "Medios Digitales I", semestre: 5, abre: ["Medios Digitales II"] },
+      { nombre: "Sistemas de Reproducción I", semestre: 5, req: ["Taller de papel y textil"], abre: ["Sistemas de Reproducción II"] },
+      { nombre: "Historia del Diseño Gráfico", semestre: 6 },
+      { nombre: "Seminario de Realidad Nacional 1", semestre: 6, req: ["Humanidades 2"], abre: ["Seminario de Realidad Nacional 2"] },
+      { nombre: "Diseño Gráfico II", semestre: 6, req: ["Diseño Gráfico I"], abre: ["Diseño Gráfico III"] },
+      { nombre: "Taller Gráfico II", semestre: 6, req: ["Taller Gráfico I"], abre: ["Taller Gráfico III"] },
+      { nombre: "Fotografía II", semestre: 6, req: ["Fotografía I"], abre: ["Fotografía III"] },
+      { nombre: "Medios Digitales II", semestre: 6, req: ["Medios Digitales I"], abre: ["Medios Digitales III"] },
+      { nombre: "Sistemas de Reproducción II", semestre: 6, req: ["Sistemas de Reproducción I"], abre: ["Sistemas de Reproducción III"] },
+
+      // Cuarto año
+      { nombre: "Historia del arte optativa I", semestre: 7 },
+      { nombre: "Idioma", semestre: 7 },
+      { nombre: "Diseño Gráfico III", semestre: 7, req: ["Diseño Gráfico II"], abre: ["Diseño Interactivo"] },
+      { nombre: "Taller Gráfico III", semestre: 7, req: ["Taller Gráfico II"], abre: ["Diseño Interactivo"] },
+      { nombre: "Fotografía III", semestre: 7, req: ["Fotografía II"] },
+      { nombre: "Medios Digitales III", semestre: 7, req: ["Medios Digitales II"] },
+      { nombre: "Sistemas de Reproducción III", semestre: 7, req: ["Sistemas de Reproducción II"], abre: ["Diseño Interactivo"] },
+      { nombre: "Historia del arte optativa II", semestre: 8 },
+      { nombre: "Seminario de Realidad Nacional 2", semestre: 8, req: ["Seminario de Realidad Nacional 1"] },
+      { nombre: "Taller Optativo I", semestre: 8 },
+      { nombre: "Taller Optativo II", semestre: 8 },
+      { nombre: "Dibujo optativo II", semestre: 8 },
+      { nombre: "Dibujo optativo III", semestre: 8 },
+      { nombre: "Diseño Interactivo", semestre: 8, req: ["Diseño Gráfico III", "Taller Gráfico III", "Sistemas de Reproducción III"], abre: ["Taller especializado I"] },
+
+      // Quinto año
+      { nombre: "Taller Optativo III", semestre: 9 },
+      { nombre: "Taller Optativo IV", semestre: 9 },
+      { nombre: "Taller Optativo V", semestre: 9 },
+      { nombre: "Técnicas de Investigación", semestre: 9 },
+      { nombre: "Taller especializado I", semestre: 9, req: ["Diseño Interactivo"], abre: ["Taller especializado II"] },
+      { nombre: "Taller Optativo VI", semestre: 10 },
+      { nombre: "Taller Optativo VII", semestre: 10 },
+      { nombre: "Adm. De las artes", semestre: 10 },
+      { nombre: "Taller especializado II", semestre: 10, req: ["Taller especializado I"] }
     ];
 
-    let aprobadas = new Set(JSON.parse(localStorage.getItem("aprobadasDG") || "[]"));
+    function crearMalla() {
+      const malla = document.getElementById("malla");
+      const totalSemestres = 10;
 
-    function renderMalla() {
-      const container = document.getElementById("mallaContainer");
-      container.innerHTML = "";
-
-      for (let sem = 1; sem <= 10; sem++) {
+      for (let i = 1; i <= totalSemestres; i++) {
         const col = document.createElement("div");
         col.className = "semestre";
-        col.innerHTML = `<h2>${sem} Semestre</h2>`;
+        col.innerHTML = `<h2>${i} Semestre</h2>`;
 
-        materias.filter(m => m[2] === sem).forEach(([id, nombre, , requisitos]) => {
+        cursos.filter(c => c.semestre === i).forEach(curso => {
           const div = document.createElement("div");
-          div.className = "materia";
-          div.textContent = nombre;
-
-          const noCumple = requisitos.filter(r => !aprobadas.has(r));
-
-          if (noCumple.length) {
-            div.classList.add("bloqueada");
-            div.setAttribute("data-tooltip", "Requiere: " + noCumple.map(req =>
-              materias.find(m => m[0] === req)?.[1] || req
-            ).join(", "));
-          } else {
-            div.addEventListener("click", () => {
-              if (aprobadas.has(id)) {
-                aprobadas.delete(id);
-              } else {
-                aprobadas.add(id);
-              }
-              localStorage.setItem("aprobadasDG", JSON.stringify([...aprobadas]));
-              renderMalla();
-            });
+          div.className = "curso";
+          div.textContent = curso.nombre;
+          div.dataset.nombre = curso.nombre;
+          if (!esDesbloqueado(curso)) {
+            div.classList.add("bloqueado");
+            div.dataset.tooltip = "Requiere: " + (curso.req || []).join(", ");
           }
-
-          if (aprobadas.has(id)) {
-            div.classList.add("aprobada");
+          if (localStorage.getItem(curso.nombre)) {
+            div.classList.add("aprobado");
           }
-
+          div.addEventListener("click", () => toggleCurso(div, curso));
           col.appendChild(div);
         });
 
-        container.appendChild(col);
+        malla.appendChild(col);
       }
     }
 
-    function reiniciarMalla() {
-      if (confirm("¿Seguro que quieres borrar todo tu progreso?")) {
-        localStorage.removeItem("aprobadasDG");
-        aprobadas = new Set();
-        renderMalla();
-      }
+    function esDesbloqueado(curso) {
+      if (!curso.req) return true;
+      return curso.req.every(r => localStorage.getItem(r));
     }
 
-    renderMalla();
+    function toggleCurso(elemento, curso) {
+      if (elemento.classList.contains("bloqueado")) return;
+      const aprobado = elemento.classList.toggle("aprobado");
+      if (aprobado) {
+        localStorage.setItem(curso.nombre, true);
+      } else {
+        localStorage.removeItem(curso.nombre);
+      }
+      location.reload();
+    }
+
+    crearMalla();
   </script>
 </body>
 </html>
