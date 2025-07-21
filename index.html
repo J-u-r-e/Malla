@@ -2,66 +2,82 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Malla Curricular Diseño Gráfico</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Malla Curricular - Diseño Gráfico</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: #fefefe;
+      background: #fdf6ff;
       margin: 0;
-      padding: 2rem;
+      padding: 20px;
       color: #333;
     }
+
     h1 {
       text-align: center;
-      color: #5a4e7c;
+      color: #7d4ab7;
+      margin-bottom: 30px;
     }
-    .malla {
-      display: grid;
-      grid-template-columns: repeat(10, 1fr);
-      gap: 1rem;
-      margin-top: 2rem;
+
+    .grid {
+      display: flex;
+      overflow-x: auto;
+      gap: 20px;
+      padding-bottom: 30px;
     }
-    .semestre {
-      background: #faf8ff;
-      border: 1px solid #e5e0f0;
+
+    .semester {
+      min-width: 200px;
+      background-color: #e6f7f4;
+      border-radius: 16px;
+      padding: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      flex-shrink: 0;
+    }
+
+    .semester h3 {
+      text-align: center;
+      margin-bottom: 15px;
+      color: #5e338f;
+    }
+
+    .course {
+      background: #f3eaff;
+      border: 2px solid #c7a8f0;
       border-radius: 10px;
-      padding: 0.5rem;
-    }
-    .semestre h2 {
-      text-align: center;
-      background: #e5dbff;
-      padding: 0.3rem;
-      border-radius: 5px;
-      color: #4b3f71;
-      font-size: 1rem;
-    }
-    .materia {
-      background: #d6f7ec;
-      border: 1px solid #9ddac0;
-      border-radius: 6px;
-      margin: 0.4rem 0;
-      padding: 0.4rem;
-      text-align: center;
+      padding: 10px;
+      margin-bottom: 10px;
       cursor: pointer;
-      font-size: 0.9rem;
-      transition: background 0.3s;
+      text-align: center;
+      font-size: 0.9em;
+      transition: background 0.2s;
+      position: relative;
     }
-    .materia:hover {
-      background-color: #bdf0dc;
-    }
-    .materia.bloqueada {
-      background: #f2f2f2;
-      color: #aaa;
+
+    .course.locked {
+      background: #eee;
+      color: #999;
+      border: 2px dashed #ccc;
       cursor: not-allowed;
-      border: 1px dashed #ccc;
     }
-    .materia.bloqueada:hover::after {
+
+    .course.approved {
+      background: #b8e8d2;
+      border-color: #80d6b0;
+      color: #235b4e;
+    }
+
+    .course:hover:not(.locked):not(.approved) {
+      background: #ddd0ff;
+    }
+
+    .course[data-tooltip]:hover::after {
       content: attr(data-tooltip);
       position: absolute;
-      background: #333;
-      color: white;
-      padding: 5px;
-      font-size: 0.75rem;
+      background: #444;
+      color: #fff;
+      padding: 5px 8px;
+      font-size: 0.75em;
       border-radius: 5px;
       top: 100%;
       left: 50%;
@@ -69,37 +85,11 @@
       white-space: nowrap;
       z-index: 10;
     }
-    .materia.aprobada {
-      background-color: #dadbff;
-      border-color: #b0b1f0;
-      text-decoration: line-through;
-    }
-    .acciones {
-      margin-top: 2rem;
-      text-align: center;
-    }
-    .acciones button {
-      background: #cdbfff;
-      border: none;
-      padding: 0.6rem 1.2rem;
-      border-radius: 6px;
-      cursor: pointer;
-      color: #333;
-      font-weight: bold;
-      transition: background 0.3s;
-    }
-    .acciones button:hover {
-      background: #b7a7f0;
-    }
   </style>
 </head>
 <body>
   <h1>Malla Curricular - Diseño Gráfico</h1>
-  <div class="malla" id="mallaContainer"></div>
-
-  <div class="acciones">
-    <button onclick="reiniciarMalla()">Reiniciar Progreso</button>
-  </div>
+  <div class="grid" id="malla"></div>
 
   <script>
     const materias = [
@@ -169,61 +159,56 @@
       ["tEsp2", "Taller especializado II", 10, ["tEsp1"]]
     ];
 
-    let aprobadas = new Set(JSON.parse(localStorage.getItem("aprobadasDG") || "[]"));
+    const semestres = [...new Set(cursos.map(c => c.semestre))];
+    const aprobados = JSON.parse(localStorage.getItem("aprobados") || "[]");
 
-    function renderMalla() {
-      const container = document.getElementById("mallaContainer");
-      container.innerHTML = "";
-
-      for (let sem = 1; sem <= 10; sem++) {
+    function render() {
+      const malla = document.getElementById("malla");
+      malla.innerHTML = "";
+      semestres.forEach(sem => {
         const col = document.createElement("div");
-        col.className = "semestre";
-        col.innerHTML = `<h2>${sem} Semestre</h2>`;
+        col.className = "semester";
+        const title = document.createElement("h3");
+        title.textContent = sem;
+        col.appendChild(title);
 
-        materias.filter(m => m[2] === sem).forEach(([id, nombre, , requisitos]) => {
+        cursos.filter(c => c.semestre === sem).forEach(curso => {
           const div = document.createElement("div");
-          div.className = "materia";
-          div.textContent = nombre;
+          div.className = "course";
+          div.textContent = curso.nombre;
+          div.dataset.id = curso.id;
 
-          const noCumple = requisitos.filter(r => !aprobadas.has(r));
+          const esAprobado = aprobados.includes(curso.id);
+          const tieneRequisitos = curso.requisitos && curso.requisitos.length > 0;
+          const requisitosCumplidos = !tieneRequisitos || curso.requisitos.every(req => aprobados.includes(req));
 
-          if (noCumple.length) {
-            div.classList.add("bloqueada");
-            div.setAttribute("data-tooltip", "Requiere: " + noCumple.map(req =>
-              materias.find(m => m[0] === req)?.[1] || req
-            ).join(", "));
-          } else {
-            div.addEventListener("click", () => {
-              if (aprobadas.has(id)) {
-                aprobadas.delete(id);
-              } else {
-                aprobadas.add(id);
-              }
-              localStorage.setItem("aprobadasDG", JSON.stringify([...aprobadas]));
-              renderMalla();
-            });
+          if (!requisitosCumplidos) {
+            div.classList.add("locked");
+            div.dataset.tooltip = "Requiere: " + curso.requisitos.filter(r => !aprobados.includes(r)).join(", ");
+          } else if (esAprobado) {
+            div.classList.add("approved");
           }
 
-          if (aprobadas.has(id)) {
-            div.classList.add("aprobada");
-          }
+          div.addEventListener("click", () => {
+            if (div.classList.contains("locked")) return;
+            const index = aprobados.indexOf(curso.id);
+            if (index >= 0) {
+              aprobados.splice(index, 1);
+            } else {
+              aprobados.push(curso.id);
+            }
+            localStorage.setItem("aprobados", JSON.stringify(aprobados));
+            render();
+          });
 
           col.appendChild(div);
         });
 
-        container.appendChild(col);
-      }
+        malla.appendChild(col);
+      });
     }
 
-    function reiniciarMalla() {
-      if (confirm("¿Seguro que quieres borrar todo tu progreso?")) {
-        localStorage.removeItem("aprobadasDG");
-        aprobadas = new Set();
-        renderMalla();
-      }
-    }
-
-    renderMalla();
+    render();
   </script>
 </body>
 </html>
