@@ -1,214 +1,227 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Malla Curricular Diseño Gráfico</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: #f9f7fd;
+      background: #fdfdfd;
+      color: #333;
       margin: 0;
       padding: 2rem;
-      color: #333;
     }
-
     h1 {
       text-align: center;
-      color: #6a1b9a;
-      margin-bottom: 1.5rem;
+      color: #5a4e7c;
     }
-
     .malla {
       display: grid;
-      grid-auto-flow: column;
-      grid-auto-columns: minmax(200px, 1fr);
+      grid-template-columns: repeat(10, 1fr);
       gap: 1rem;
-      overflow-x: auto;
     }
-
     .semestre {
-      background: #e0f2f1;
-      border-radius: 12px;
-      padding: 1rem;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-      min-width: 200px;
+      background: #faf8ff;
+      border-radius: 10px;
+      padding: 0.5rem;
+      border: 2px solid #e8e5f0;
     }
-
-    .semestre:nth-child(even) {
-      background: #ede7f6;
-    }
-
     .semestre h2 {
       text-align: center;
-      color: #4a148c;
+      background-color: #e3dcff;
+      padding: 0.3rem;
+      border-radius: 6px;
       font-size: 1rem;
-      margin-bottom: 0.5rem;
+      color: #4b3f71;
     }
-
-    .curso {
-      background: #ffffff;
-      margin: 0.4rem 0;
-      padding: 0.5rem;
-      border-radius: 8px;
-      border: 2px solid #b39ddb;
+    .materia {
+      background-color: #d6f7ec;
+      border: 1px solid #9ddac0;
+      border-radius: 6px;
+      margin: 0.5rem 0;
+      padding: 0.4rem;
+      text-align: center;
       cursor: pointer;
       position: relative;
-      transition: 0.2s;
-      font-size: 0.85rem;
+      transition: background 0.3s ease;
+      font-size: 0.9rem;
     }
-
-    .curso.locked {
-      opacity: 0.5;
-      pointer-events: none;
+    .materia:hover {
+      background-color: #c0f0dc;
     }
-
-    .curso.locked::after {
+    .materia.bloqueada {
+      background-color: #f4f4f4;
+      color: #aaa;
+      cursor: not-allowed;
+      border: 1px dashed #ccc;
+    }
+    .materia.bloqueada:hover::after {
       content: attr(data-tooltip);
       position: absolute;
-      left: 105%;
-      top: 50%;
-      transform: translateY(-50%);
-      background: #ffe0b2;
-      color: #6d4c41;
-      padding: 0.3rem 0.6rem;
-      border-radius: 6px;
-      white-space: nowrap;
+      background: #333;
+      color: white;
+      padding: 5px;
+      border-radius: 5px;
       font-size: 0.75rem;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
       z-index: 10;
     }
-
-    .curso.approved {
-      background-color: #c8e6c9;
-      border-color: #81c784;
+    .materia.aprobada {
+      background-color: #dadbff;
+      border-color: #b0b1f0;
       text-decoration: line-through;
+    }
+
+    .acciones {
+      margin-top: 2rem;
+      text-align: center;
+    }
+    .acciones button {
+      background: #cdbfff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #333;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+    .acciones button:hover {
+      background: #b7a7f0;
     }
   </style>
 </head>
 <body>
-  <h1>Malla Curricular – Diseño Gráfico</h1>
-  <div id="malla" class="malla"></div>
+  <h1>Malla Curricular - Diseño Gráfico</h1>
+  <div class="malla" id="mallaContainer"></div>
+
+  <div class="acciones">
+    <button onclick="reiniciarMalla()">Reiniciar Progreso</button>
+  </div>
 
   <script>
-    const cursos = [
-      { id: "hum1", nombre: "Humanidades 1", semestre: "I Semestre", desbloquea: ["hum2"] },
-      { id: "actcult", nombre: "Actividad cultural", semestre: "I Semestre" },
-      { id: "actdeport", nombre: "Actividad deportiva", semestre: "I Semestre" },
-      { id: "dis1", nombre: "Diseño I", semestre: "I Semestre", desbloquea: ["dis2"] },
-      { id: "dib1", nombre: "Dibujo I", semestre: "I Semestre", desbloquea: ["dib2"] },
-      { id: "pigmentos", nombre: "Taller de pigmentos", semestre: "I Semestre", desbloquea: ["tallgraf1"] },
-      { id: "arcilla", nombre: "Taller de arcilla", semestre: "I Semestre" },
-
-      { id: "hum2", nombre: "Humanidades 2", semestre: "II Semestre", requisitos: ["hum1"], desbloquea: ["semreal1"] },
-      { id: "teoarte", nombre: "Teoría del arte", semestre: "II Semestre", desbloquea: ["semiosis"] },
-      { id: "dis2", nombre: "Diseño II", semestre: "II Semestre", requisitos: ["dis1"], desbloquea: ["dis3"] },
-      { id: "dib2", nombre: "Dibujo II", semestre: "II Semestre", requisitos: ["dib1"], desbloquea: ["dib3"] },
-      { id: "madera", nombre: "Taller de madera", semestre: "II Semestre" },
-      { id: "papel", nombre: "Taller de papel y textil", semestre: "II Semestre", desbloquea: ["sisrep1"] },
-
-      { id: "arte1", nombre: "Introducción al arte 1", semestre: "III Semestre", desbloquea: ["arte2"] },
-      { id: "antro", nombre: "Introducción a la Antropología", semestre: "III Semestre" },
-      { id: "dis3", nombre: "Diseño III", semestre: "III Semestre", requisitos: ["dis2"], desbloquea: ["dis4"] },
-      { id: "dib3", nombre: "Dibujo III", semestre: "III Semestre", requisitos: ["dib2"], desbloquea: ["dib4"] },
-      { id: "vidrio", nombre: "Taller de vidrio y plástico", semestre: "III Semestre" },
-      { id: "metal", nombre: "Taller de metal", semestre: "III Semestre" },
-
-      { id: "arte2", nombre: "Introducción al arte 2", semestre: "IV Semestre", requisitos: ["arte1"], desbloquea: ["artecr", "histdg"] },
-      { id: "semiosis", nombre: "Semiosis de la producción", semestre: "IV Semestre", requisitos: ["teoarte"] },
-      { id: "repertorio", nombre: "Repertorio", semestre: "IV Semestre" },
-      { id: "dis4", nombre: "Diseño IV", semestre: "IV Semestre", requisitos: ["dis3"], desbloquea: ["disgraf1", "foto1"] },
-      { id: "dib4", nombre: "Dibujo IV", semestre: "IV Semestre", requisitos: ["dib3"], desbloquea: ["tallgraf1", "dibopt1", "dibopt2", "dibopt3", "tallopt1", "tallopt2"] },
-      { id: "iluminacion", nombre: "Taller de iluminación", semestre: "IV Semestre", desbloquea: ["foto1"] },
-      { id: "piedra", nombre: "Taller de piedra", semestre: "IV Semestre" },
-
-      { id: "artecr", nombre: "Arte Costarricense", semestre: "V Semestre" },
-      { id: "dibopt1", nombre: "Dibujo optativo I", semestre: "V Semestre" },
-      { id: "disgraf1", nombre: "Diseño Gráfico I", semestre: "V Semestre", requisitos: ["dis4"], desbloquea: ["disgraf2"] },
-      { id: "tallgraf1", nombre: "Taller Gráfico I", semestre: "V Semestre", requisitos: ["pigmentos", "dib4"], desbloquea: ["tallgraf2"] },
-      { id: "foto1", nombre: "Fotografía I", semestre: "V Semestre", requisitos: ["dis4", "iluminacion"], desbloquea: ["foto2"] },
-      { id: "medios1", nombre: "Medios Digitales I", semestre: "V Semestre", desbloquea: ["medios2"] },
-      { id: "sisrep1", nombre: "Sistemas de Reproducción I", semestre: "V Semestre", requisitos: ["papel"], desbloquea: ["sisrep2"] },
-
-      { id: "histdg", nombre: "Historia del Diseño Gráfico", semestre: "VI Semestre" },
-      { id: "semreal1", nombre: "Seminario de Realidad Nacional 1", semestre: "VI Semestre", requisitos: ["hum2"], desbloquea: ["semreal2"] },
-      { id: "disgraf2", nombre: "Diseño Gráfico II", semestre: "VI Semestre", requisitos: ["disgraf1"], desbloquea: ["disgraf3"] },
-      { id: "tallgraf2", nombre: "Taller Gráfico II", semestre: "VI Semestre", requisitos: ["tallgraf1"], desbloquea: ["tallgraf3"] },
-      { id: "foto2", nombre: "Fotografía II", semestre: "VI Semestre", requisitos: ["foto1"], desbloquea: ["foto3"] },
-      { id: "medios2", nombre: "Medios Digitales II", semestre: "VI Semestre", requisitos: ["medios1"], desbloquea: ["medios3"] },
-      { id: "sisrep2", nombre: "Sistemas de Reproducción II", semestre: "VI Semestre", requisitos: ["sisrep1"], desbloquea: ["sisrep3"] },
-
-      { id: "histopt1", nombre: "Historia del arte optativa I", semestre: "VII Semestre" },
-      { id: "idioma", nombre: "Idioma", semestre: "VII Semestre" },
-      { id: "disgraf3", nombre: "Diseño Gráfico III", semestre: "VII Semestre", requisitos: ["disgraf2"], desbloquea: ["interactivo"] },
-      { id: "tallgraf3", nombre: "Taller Gráfico III", semestre: "VII Semestre", requisitos: ["tallgraf2"], desbloquea: ["interactivo"] },
-      { id: "foto3", nombre: "Fotografía III", semestre: "VII Semestre", requisitos: ["foto2"] },
-      { id: "medios3", nombre: "Medios Digitales III", semestre: "VII Semestre", requisitos: ["medios2"] },
-      { id: "sisrep3", nombre: "Sistemas de Reproducción III", semestre: "VII Semestre", requisitos: ["sisrep2"], desbloquea: ["interactivo"] },
-
-      { id: "histopt2", nombre: "Historia del arte optativa II", semestre: "VIII Semestre" },
-      { id: "semreal2", nombre: "Seminario de Realidad Nacional 2", semestre: "VIII Semestre", requisitos: ["semreal1"] },
-      { id: "tallopt1", nombre: "Taller Optativo I", semestre: "VIII Semestre", requisitos: ["dib4"] },
-      { id: "tallopt2", nombre: "Taller Optativo II", semestre: "VIII Semestre", requisitos: ["dib4"] },
-      { id: "dibopt2", nombre: "Dibujo optativo II", semestre: "VIII Semestre", requisitos: ["dib4"] },
-      { id: "dibopt3", nombre: "Dibujo optativo III", semestre: "VIII Semestre", requisitos: ["dib4"] },
-      { id: "interactivo", nombre: "Diseño Interactivo", semestre: "VIII Semestre", requisitos: ["disgraf3", "tallgraf3", "sisrep3"], desbloquea: ["tallesp1"] },
-
-      { id: "tallopt3", nombre: "Taller Optativo III", semestre: "IX Semestre" },
-      { id: "tallopt4", nombre: "Taller Optativo IV", semestre: "IX Semestre" },
-      { id: "tallopt5", nombre: "Taller Optativo V", semestre: "IX Semestre" },
-      { id: "invtec", nombre: "Técnicas de Investigación", semestre: "IX Semestre" },
-      { id: "tallesp1", nombre: "Taller especializado I", semestre: "IX Semestre", requisitos: ["interactivo"] },
-
-      { id: "tallopt6", nombre: "Taller Optativo VI", semestre: "X Semestre" },
-      { id: "tallopt7", nombre: "Taller Optativo VII", semestre: "X Semestre" },
-      { id: "adm", nombre: "Adm. De las artes", semestre: "X Semestre" },
-      { id: "tallesp2", nombre: "Taller especializado II", semestre: "X Semestre" },
+    const materias = [
+      ["hum1", "Humanidades 1", 1, []],
+      ["actCult", "Actividad cultural", 1, []],
+      ["actDeport", "Actividad deportiva", 1, []],
+      ["dis1", "Diseño I", 1, []],
+      ["dib1", "Dibujo I", 1, []],
+      ["pig", "Taller de pigmentos", 1, []],
+      ["arcilla", "Taller de arcilla", 1, []],
+      ["hum2", "Humanidades 2", 2, ["hum1"]],
+      ["ta", "Teoría del arte", 2, []],
+      ["dis2", "Diseño II", 2, ["dis1"]],
+      ["dib2", "Dibujo II", 2, ["dib1"]],
+      ["madera", "Taller de madera", 2, []],
+      ["papelTextil", "Taller papel/textil", 2, []],
+      ["arte1", "Introducción al arte 1", 3, []],
+      ["antropo", "Introducción a la Antropología", 3, []],
+      ["dis3", "Diseño III", 3, ["dis2"]],
+      ["dib3", "Dibujo III", 3, ["dib2"]],
+      ["vidrio", "Taller de vidrio/plástico", 3, []],
+      ["metal", "Taller de metal", 3, []],
+      ["arte2", "Introducción al arte 2", 4, ["arte1"]],
+      ["semiosis", "Semiosis de la producción", 4, ["ta"]],
+      ["repertorio", "Repertorio", 4, []],
+      ["dis4", "Diseño IV", 4, ["dis3"]],
+      ["dib4", "Dibujo IV", 4, ["dib3"]],
+      ["iluminacion", "Taller de iluminación", 4, []],
+      ["piedra", "Taller de piedra", 4, []],
+      ["arteCR", "Arte Costarricense", 5, ["arte2"]],
+      ["dibOpt1", "Dibujo optativo I", 5, ["dib4"]],
+      ["disGraf1", "Diseño Gráfico I", 5, ["dis4"]],
+      ["tg1", "Taller Gráfico I", 5, ["pig", "dib4"]],
+      ["foto1", "Fotografía I", 5, ["iluminacion", "dis4"]],
+      ["medios1", "Medios Digitales I", 5, []],
+      ["sr1", "Sistemas de Reproducción I", 5, ["papelTextil"]],
+      ["histDG", "Historia del Diseño Gráfico", 6, []],
+      ["semRN1", "Sem. Realidad Nac. 1", 6, ["hum2"]],
+      ["disGraf2", "Diseño Gráfico II", 6, ["disGraf1"]],
+      ["tg2", "Taller Gráfico II", 6, ["tg1"]],
+      ["foto2", "Fotografía II", 6, ["foto1"]],
+      ["medios2", "Medios Digitales II", 6, ["medios1"]],
+      ["sr2", "Sistemas de Reproducción II", 6, ["sr1"]],
+      ["histOpt1", "Historia del arte opt. I", 7, []],
+      ["idioma", "Idioma", 7, []],
+      ["disGraf3", "Diseño Gráfico III", 7, ["disGraf2"]],
+      ["tg3", "Taller Gráfico III", 7, ["tg2"]],
+      ["foto3", "Fotografía III", 7, ["foto2"]],
+      ["medios3", "Medios Digitales III", 7, ["medios2"]],
+      ["sr3", "Sistemas de Reproducción III", 7, ["sr2"]],
+      ["histOpt2", "Historia del arte opt. II", 8, []],
+      ["semRN2", "Sem. Realidad Nac. 2", 8, ["semRN1"]],
+      ["tOpt1", "Taller Optativo I", 8, []],
+      ["tOpt2", "Taller Optativo II", 8, []],
+      ["dibOpt2", "Dibujo optativo II", 8, ["dib4"]],
+      ["dibOpt3", "Dibujo optativo III", 8, ["dib4"]],
+      ["disInteract", "Diseño Interactivo", 8, ["disGraf3", "tg3", "sr3"]],
+      ["tOpt3", "Taller Optativo III", 9, []],
+      ["tOpt4", "Taller Optativo IV", 9, []],
+      ["tOpt5", "Taller Optativo V", 9, []],
+      ["inv", "Técnicas de Investigación", 9, []],
+      ["tEsp1", "Taller especializado I", 9, ["disInteract"]],
+      ["tOpt6", "Taller Optativo VI", 10, []],
+      ["tOpt7", "Taller Optativo VII", 10, []],
+      ["adm", "Adm. De las artes", 10, []],
+      ["tEsp2", "Taller especializado II", 10, ["tEsp1"]]
     ];
 
-    const estado = JSON.parse(localStorage.getItem("mallaEstado") || "{}");
-    const contenedor = document.getElementById("malla");
+    let aprobadas = new Set(JSON.parse(localStorage.getItem("aprobadasDG") || "[]"));
 
-    const porSemestre = {};
-    cursos.forEach(curso => {
-      if (!porSemestre[curso.semestre]) porSemestre[curso.semestre] = [];
-      porSemestre[curso.semestre].push(curso);
-    });
+    function renderMalla() {
+      const cont = document.getElementById("mallaContainer");
+      cont.innerHTML = "";
 
-    for (const [semestre, lista] of Object.entries(porSemestre)) {
-      const columna = document.createElement("div");
-      columna.className = "semestre";
-      columna.innerHTML = `<h2>${semestre}</h2>`;
-      lista.forEach(curso => {
-        const divCurso = document.createElement("div");
-        divCurso.className = "curso";
-        divCurso.textContent = curso.nombre;
-        divCurso.dataset.id = curso.id;
+      for (let i = 1; i <= 10; i++) {
+        const col = document.createElement("div");
+        col.className = "semestre";
+        col.innerHTML = `<h2>${i} Semestre</h2>`;
 
-        const aprobado = estado[curso.id];
-        const requisitosOk = !curso.requisitos || curso.requisitos.every(r => estado[r]);
+        materias.filter(m => m[2] === i).forEach(m => {
+          const [id, nombre, , reqs] = m;
+          const div = document.createElement("div");
+          div.className = "materia";
+          div.textContent = nombre;
 
-        if (!requisitosOk) {
-          divCurso.classList.add("locked");
-          const faltantes = curso.requisitos.filter(r => !estado[r]);
-          const nombres = cursos.filter(c => faltantes.includes(c.id)).map(c => c.nombre);
-          divCurso.dataset.tooltip = `Requiere: ${nombres.join(", ")}`;
-        }
+          const pendientes = reqs.filter(r => !aprobadas.has(r));
+          if (pendientes.length) {
+            div.classList.add("bloqueada");
+            div.setAttribute("data-tooltip", "Requiere: " + pendientes.map(id => {
+              const mat = materias.find(m => m[0] === id);
+              return mat ? mat[1] : id;
+            }).join(", "));
+          } else {
+            div.addEventListener("click", () => {
+              if (aprobadas.has(id)) {
+                aprobadas.delete(id);
+              } else {
+                aprobadas.add(id);
+              }
+              localStorage.setItem("aprobadasDG", JSON.stringify([...aprobadas]));
+              renderMalla();
+            });
+          }
 
-        if (aprobado) {
-          divCurso.classList.add("approved");
-        }
-
-        divCurso.addEventListener("click", () => {
-          estado[curso.id] = !estado[curso.id];
-          localStorage.setItem("mallaEstado", JSON.stringify(estado));
-          location.reload();
+          if (aprobadas.has(id)) div.classList.add("aprobada");
+          col.appendChild(div);
         });
 
-        columna.appendChild(divCurso);
-      });
-
-      contenedor.appendChild(columna);
+        cont.appendChild(col);
+      }
     }
+
+    function reiniciarMalla() {
+      if (confirm("¿Seguro que quieres borrar todo tu progreso?")) {
+        localStorage.removeItem("aprobadasDG");
+        aprobadas = new Set();
+        renderMalla();
+      }
+    }
+
+    renderMalla();
   </script>
 </body>
 </html>
