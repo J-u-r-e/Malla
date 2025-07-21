@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Malla Curricular Diseño Gráfico</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: #fdfdfd;
-      color: #333;
+      background: #fefefe;
       margin: 0;
       padding: 2rem;
+      color: #333;
     }
     h1 {
       text-align: center;
@@ -19,38 +19,38 @@
       display: grid;
       grid-template-columns: repeat(10, 1fr);
       gap: 1rem;
+      margin-top: 2rem;
     }
     .semestre {
       background: #faf8ff;
+      border: 1px solid #e5e0f0;
       border-radius: 10px;
       padding: 0.5rem;
-      border: 2px solid #e8e5f0;
     }
     .semestre h2 {
       text-align: center;
-      background-color: #e3dcff;
+      background: #e5dbff;
       padding: 0.3rem;
-      border-radius: 6px;
-      font-size: 1rem;
+      border-radius: 5px;
       color: #4b3f71;
+      font-size: 1rem;
     }
     .materia {
-      background-color: #d6f7ec;
+      background: #d6f7ec;
       border: 1px solid #9ddac0;
       border-radius: 6px;
-      margin: 0.5rem 0;
+      margin: 0.4rem 0;
       padding: 0.4rem;
       text-align: center;
       cursor: pointer;
-      position: relative;
-      transition: background 0.3s ease;
       font-size: 0.9rem;
+      transition: background 0.3s;
     }
     .materia:hover {
-      background-color: #c0f0dc;
+      background-color: #bdf0dc;
     }
     .materia.bloqueada {
-      background-color: #f4f4f4;
+      background: #f2f2f2;
       color: #aaa;
       cursor: not-allowed;
       border: 1px dashed #ccc;
@@ -61,8 +61,8 @@
       background: #333;
       color: white;
       padding: 5px;
-      border-radius: 5px;
       font-size: 0.75rem;
+      border-radius: 5px;
       top: 100%;
       left: 50%;
       transform: translateX(-50%);
@@ -74,7 +74,6 @@
       border-color: #b0b1f0;
       text-decoration: line-through;
     }
-
     .acciones {
       margin-top: 2rem;
       text-align: center;
@@ -82,7 +81,7 @@
     .acciones button {
       background: #cdbfff;
       border: none;
-      padding: 0.5rem 1rem;
+      padding: 0.6rem 1.2rem;
       border-radius: 6px;
       cursor: pointer;
       color: #333;
@@ -104,6 +103,7 @@
 
   <script>
     const materias = [
+      // id, nombre, semestre, requisitos
       ["hum1", "Humanidades 1", 1, []],
       ["actCult", "Actividad cultural", 1, []],
       ["actDeport", "Actividad deportiva", 1, []],
@@ -121,7 +121,7 @@
       ["antropo", "Introducción a la Antropología", 3, []],
       ["dis3", "Diseño III", 3, ["dis2"]],
       ["dib3", "Dibujo III", 3, ["dib2"]],
-      ["vidrio", "Taller de vidrio/plástico", 3, []],
+      ["vidrio", "Taller vidrio/plástico", 3, []],
       ["metal", "Taller de metal", 3, []],
       ["arte2", "Introducción al arte 2", 4, ["arte1"]],
       ["semiosis", "Semiosis de la producción", 4, ["ta"]],
@@ -138,7 +138,7 @@
       ["medios1", "Medios Digitales I", 5, []],
       ["sr1", "Sistemas de Reproducción I", 5, ["papelTextil"]],
       ["histDG", "Historia del Diseño Gráfico", 6, []],
-      ["semRN1", "Sem. Realidad Nac. 1", 6, ["hum2"]],
+      ["semRN1", "Sem. Realidad Nacional 1", 6, ["hum2"]],
       ["disGraf2", "Diseño Gráfico II", 6, ["disGraf1"]],
       ["tg2", "Taller Gráfico II", 6, ["tg1"]],
       ["foto2", "Fotografía II", 6, ["foto1"]],
@@ -152,7 +152,7 @@
       ["medios3", "Medios Digitales III", 7, ["medios2"]],
       ["sr3", "Sistemas de Reproducción III", 7, ["sr2"]],
       ["histOpt2", "Historia del arte opt. II", 8, []],
-      ["semRN2", "Sem. Realidad Nac. 2", 8, ["semRN1"]],
+      ["semRN2", "Sem. Realidad Nacional 2", 8, ["semRN1"]],
       ["tOpt1", "Taller Optativo I", 8, []],
       ["tOpt2", "Taller Optativo II", 8, []],
       ["dibOpt2", "Dibujo optativo II", 8, ["dib4"]],
@@ -165,34 +165,33 @@
       ["tEsp1", "Taller especializado I", 9, ["disInteract"]],
       ["tOpt6", "Taller Optativo VI", 10, []],
       ["tOpt7", "Taller Optativo VII", 10, []],
-      ["adm", "Adm. De las artes", 10, []],
+      ["adm", "Administración de las artes", 10, []],
       ["tEsp2", "Taller especializado II", 10, ["tEsp1"]]
     ];
 
     let aprobadas = new Set(JSON.parse(localStorage.getItem("aprobadasDG") || "[]"));
 
     function renderMalla() {
-      const cont = document.getElementById("mallaContainer");
-      cont.innerHTML = "";
+      const container = document.getElementById("mallaContainer");
+      container.innerHTML = "";
 
-      for (let i = 1; i <= 10; i++) {
+      for (let sem = 1; sem <= 10; sem++) {
         const col = document.createElement("div");
         col.className = "semestre";
-        col.innerHTML = `<h2>${i} Semestre</h2>`;
+        col.innerHTML = `<h2>${sem} Semestre</h2>`;
 
-        materias.filter(m => m[2] === i).forEach(m => {
-          const [id, nombre, , reqs] = m;
+        materias.filter(m => m[2] === sem).forEach(([id, nombre, , requisitos]) => {
           const div = document.createElement("div");
           div.className = "materia";
           div.textContent = nombre;
 
-          const pendientes = reqs.filter(r => !aprobadas.has(r));
-          if (pendientes.length) {
+          const noCumple = requisitos.filter(r => !aprobadas.has(r));
+
+          if (noCumple.length) {
             div.classList.add("bloqueada");
-            div.setAttribute("data-tooltip", "Requiere: " + pendientes.map(id => {
-              const mat = materias.find(m => m[0] === id);
-              return mat ? mat[1] : id;
-            }).join(", "));
+            div.setAttribute("data-tooltip", "Requiere: " + noCumple.map(req =>
+              materias.find(m => m[0] === req)?.[1] || req
+            ).join(", "));
           } else {
             div.addEventListener("click", () => {
               if (aprobadas.has(id)) {
@@ -205,11 +204,14 @@
             });
           }
 
-          if (aprobadas.has(id)) div.classList.add("aprobada");
+          if (aprobadas.has(id)) {
+            div.classList.add("aprobada");
+          }
+
           col.appendChild(div);
         });
 
-        cont.appendChild(col);
+        container.appendChild(col);
       }
     }
 
