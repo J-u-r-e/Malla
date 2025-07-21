@@ -15,7 +15,7 @@
 
     h1 {
       text-align: center;
-      color: #7e57c2;
+      color: #6a1b9a;
       margin-bottom: 1.5rem;
     }
 
@@ -28,16 +28,20 @@
     }
 
     .semestre {
-      background: #e3defd;
+      background: #e0f2f1;
       border-radius: 12px;
       padding: 1rem;
       box-shadow: 0 2px 6px rgba(0,0,0,0.05);
       min-width: 200px;
     }
 
+    .semestre:nth-child(even) {
+      background: #ede7f6;
+    }
+
     .semestre h2 {
       text-align: center;
-      color: #5c6bc0;
+      color: #4a148c;
       font-size: 1rem;
       margin-bottom: 0.5rem;
     }
@@ -47,7 +51,7 @@
       margin: 0.4rem 0;
       padding: 0.5rem;
       border-radius: 8px;
-      border: 2px solid #d1c4e9;
+      border: 2px solid #b39ddb;
       cursor: pointer;
       position: relative;
       transition: 0.2s;
@@ -57,7 +61,6 @@
     .curso.locked {
       opacity: 0.5;
       pointer-events: none;
-      position: relative;
     }
 
     .curso.locked::after {
@@ -88,37 +91,7 @@
 
   <script>
     const cursos = [
-      // Agregado: estructura completa en formato id, nombre, semestre, requisitos, desbloquea
       { id: "hum1", nombre: "Humanidades 1", semestre: "I Semestre", desbloquea: ["hum2"] },
       { id: "actcult", nombre: "Actividad cultural", semestre: "I Semestre" },
       { id: "actdeport", nombre: "Actividad deportiva", semestre: "I Semestre" },
-      { id: "dis1", nombre: "Diseño I", semestre: "I Semestre", desbloquea: ["dis2"] },
-      { id: "dib1", nombre: "Dibujo I", semestre: "I Semestre", desbloquea: ["dib2"] },
-      { id: "pigmentos", nombre: "Taller de pigmentos", semestre: "I Semestre", desbloquea: ["tallgraf1"] },
-      { id: "arcilla", nombre: "Taller de arcilla", semestre: "I Semestre" },
-
-      { id: "hum2", nombre: "Humanidades 2", semestre: "II Semestre", requisitos: ["hum1"], desbloquea: ["semreal1"] },
-      { id: "teoarte", nombre: "Teoría del arte", semestre: "II Semestre", desbloquea: ["semiosis"] },
-      { id: "dis2", nombre: "Diseño II", semestre: "II Semestre", requisitos: ["dis1"], desbloquea: ["dis3"] },
-      { id: "dib2", nombre: "Dibujo II", semestre: "II Semestre", requisitos: ["dib1"], desbloquea: ["dib3"] },
-      { id: "madera", nombre: "Taller de madera", semestre: "II Semestre" },
-      { id: "papel", nombre: "Taller de papel y textil", semestre: "II Semestre", desbloquea: ["sisrep1"] },
-
-      // ... continuar agregando todos los cursos como en la estructura original del usuario
-    ];
-
-    const estado = JSON.parse(localStorage.getItem("mallaEstado") || "{}");
-    const contenedor = document.getElementById("malla");
-
-    const porSemestre = {};
-    cursos.forEach(curso => {
-      if (!porSemestre[curso.semestre]) porSemestre[curso.semestre] = [];
-      porSemestre[curso.semestre].push(curso);
-    });
-
-    for (const [semestre, lista] of Object.entries(porSemestre)) {
-      const columna = document.createElement("div");
-      columna.className = "semestre";
-      columna.innerHTML = `<h2>${semestre}</h2>`;
-      lista.forEach(curso => {
-        const divCurs
+      {
